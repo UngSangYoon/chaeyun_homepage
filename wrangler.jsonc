@@ -1,0 +1,21 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "chaeyun-admin",
+	"main": "server/worker.js",
+	"compatibility_date": "2026-09-01",
+	"workers_dev": true,
+	"vars": {
+		"SITE_ORIGIN": "https://ungsangyoon.github.io",
+		"GITHUB_OWNER": "UngSangYoon",
+		"GITHUB_REPO": "chaeyun_homepage",
+		"GITHUB_BRANCH": "main"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "chaeyun-admin-auth",
+			"database_id": "fbc6b496-a767-45ac-b0aa-7cf87e7df735",
+			"migrations_dir": "migrations"
+		}
+	]
+}

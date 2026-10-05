@@ -1,0 +1,122 @@
+/* Based on the index.html / style.css supplied by the artist. */
+:root { --artwork-preview-height: clamp(220px, 48svh, 520px); }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  color: #111;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background-color: #fff;
+}
+
+.home-page {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  padding: 30px 40px;
+}
+
+.header a {
+  text-decoration: none;
+  color: #111;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+}
+
+.header .logo {
+  text-align: left;
+}
+
+.header a:hover,
+.header a[aria-current='page']:not(.logo) {
+  color: #005cff;
+}
+
+[hidden] { display: none !important; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a, button { touch-action: manipulation; }
+:focus-visible { outline: 2px solid #005cff; outline-offset: 5px; }
+.visually-hidden, .skip-link:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.skip-link:focus {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  padding: 12px;
+  background: #fff;
+  color: #111;
+  z-index: 20;
+}
+
+.brush-trail { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; user-select: none; }
+.brush-tools { position: fixed; left: max(20px, env(safe-area-inset-left)); bottom: max(20px, env(safe-area-inset-bottom)); z-index: 40; color: #1b2f59; }
+.brush-tool-buttons { display: flex; gap: 2px; }
+.brush-tool-button { display: grid; place-items: center; width: 44px; height: 44px; padding: 11px; border: 0; background: transparent; color: #718099; opacity: .45; transition: opacity 180ms ease; }
+.brush-tool-button svg { width: 22px; height: 22px; }
+.brush-palette-button[data-washed="false"] { color: var(--brush-selected-color); }
+.brush-water-button[aria-pressed="true"] { color: #1b2f59; opacity: .6; }
+.brush-tool-button:hover, .brush-tool-button:focus-visible { opacity: .8; }
+@media (prefers-reduced-motion: reduce) {
+  .brush-tool-button { transition: none; }
+}
+.brush-palette-panel { position: absolute; left: 0; bottom: calc(100% + 12px); width: 224px; max-width: calc(100vw - 40px); padding: 18px; border: 1px solid #e7e9ed; border-radius: 12px; background: #fff; box-shadow: 0 6px 28px rgb(27 47 89 / 10%); }
+.brush-palette-title { margin-bottom: 15px; font-size: 13px; }
+.brush-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+.brush-swatch { display: grid; place-items: center; width: 44px; height: 44px; padding: 7px; border: 1px solid transparent; border-radius: 50%; background: #fff; }
+.brush-swatch::before { content: ''; width: 26px; height: 26px; border-radius: 50%; background: var(--swatch-color); }
+.brush-swatch[aria-pressed="true"] { border-color: var(--swatch-color); }
+.brush-custom-color { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 15px; font-size: 12px; color: #686868; }
+.brush-custom-color input { width: 44px; height: 36px; padding: 2px; border: 1px solid #e7e9ed; background: #fff; }
+@media (prefers-reduced-motion: reduce) {
+  .brush-trail { display: none; }
+}
+
+/* The brush tip is the click hotspot; embed the SVG for all hosting paths. */
+@media (any-pointer: fine) {
+  :root {
+    --cursor-brush: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2226%22%20height%3D%2226%22%20viewBox%3D%220%200%2026%2026%22%3E%3Cg%20stroke%3D%22%23fff%22%20stroke-width%3D%22.8%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M10.5%2014.5%2021%202.5Q22.5.8%2024%202.3T23.5%205.5L14%2018Z%22%20fill%3D%22%231b2f59%22%2F%3E%3Cpath%20d%3D%22m11.5%2013%204%203.5-2.3%202.5-4-3.5Z%22%20fill%3D%22%238b9bb6%22%2F%3E%3Cpath%20d%3D%22M9.5%2016C5%2016%206%2021%203%2024c5%20.5%2010-2%2010-5.5Z%22%20fill%3D%22%231b2f59%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M10%2018c-1.5%201-2%203-4%204%22%20fill%3D%22none%22%20stroke%3D%22%237186aa%22%20stroke-width%3D%22.7%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E") 3 24;
+  }
+  html, body { cursor: var(--cursor-brush), auto; }
+  html body :is(a[href], button:not(:disabled), summary, select:not(:disabled), [role="button"]:not([aria-disabled="true"])) {
+    cursor: var(--cursor-brush), pointer;
+  }
+  html body input:not(:disabled)::file-selector-button { cursor: var(--cursor-brush), pointer; }
+  input:not(:disabled), textarea:not(:disabled), [contenteditable="true"] { cursor: text; }
+  input:is([type="checkbox"], [type="radio"]):not(:disabled) { cursor: var(--cursor-brush), pointer; }
+}
+
+@media (max-width: 760px) {
+  .header { padding: 24px; gap: 12px; }
+  .header a { font-size: 16px; }
+}
+
+@media (max-width: 520px) {
+  .header { grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 20px; gap: 18px 10px; }
+  .header .logo { grid-column: 1 / -1; font-size: 20px; }
+  .header a { font-size: 15px; }
+}

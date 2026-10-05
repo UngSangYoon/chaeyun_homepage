@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="동양화 작가 이채윤의 작품, 글, 소식과 약력.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Exhibition · Lee Chaeyun">
+  <meta property="og:description" content="동양화 작가 이채윤의 작품과 기록">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#ffffff">
+  <title>Exhibition · Lee Chaeyun</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./src/gallery.css">
+  <script type="module" src="./src/public.js"></script>
+</head>
+<body class="content-page" data-view="news">
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="header">
+    <a href="index.html" class="logo" data-english>Lee Chaeyun</a>
+    <a href="works.html" data-page="works">Works</a>
+    <a href="news.html" data-page="news">Exhibition</a>
+    <a href="texts.html" data-page="texts">Texts</a>
+    <a href="cv.html" data-page="cv">CV</a>
+  </header>
+  <main id="main" class="page">
+    <div class="page-heading"><h1>Exhibition</h1></div>
+    <section class="text-section" aria-label="전시 기록">
+      <div class="exhibition-filters" role="group" aria-label="전시 구분">
+        <button type="button" data-exhibition-type="solo" aria-pressed="true" aria-controls="exhibition-list">개인전</button>
+        <button type="button" data-exhibition-type="group" aria-pressed="false" aria-controls="exhibition-list">단체전</button>
+        <button type="button" data-exhibition-type="unclassified" aria-pressed="false" aria-controls="exhibition-list" hidden>미분류</button>
+      </div>
+      <div id="exhibition-list" class="works-years" aria-live="polite"></div>
+    </section>
+    <section id="news-section" class="text-section" aria-labelledby="news-title" hidden><h2 id="news-title">소식</h2><div id="news-list" class="news-list"></div></section>
+    <p id="load-error" class="error" role="alert" hidden></p>
+  </main>
+  <footer class="page-footer"><small>© <span id="copyright-year"></span> <span data-english>Lee Chaeyun</span></small><a href="./admin/">Admin</a></footer>
+</body>
+</html>

@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "profile": {
+    "name": "이채윤",
+    "englishName": "Lee Chaeyun",
+    "discipline": "동양화 작가",
+    "portrait": "",
+    "cvFile": "",
+    "email": "art.leechaeyun@gmail.com",
+    "instagram": "_chaeyun_lee_",
+    "intro": "뚱딩보다.",
+    "statement": "덜컹덜컹 달려간다 시골버스야.."
+  },
+  "works": [
+    {
+      "id": "a7cc3faf-8660-4866-abe7-be68fb8cbda0",
+      "title": "뚱보",
+      "year": "2026",
+      "medium": "뚱보의똥",
+      "size": "68kg",
+      "image": "uploads/08cd50bc-45a7-486a-b722-d365ca5256c3.webp",
+      "alt": "뚱보다.",
+      "description": "뚱뚱보다."
+    },
+    {
+      "id": "99cb42b6-d301-4b75-bff8-c9f1b0942c35",
+      "title": "ㅇㅇ",
+      "year": "2026",
+      "medium": "2",
+      "size": "2",
+      "image": "uploads/6eb3ecf1-5df5-4490-844c-51cf644a9fa0.webp",
+      "alt": "2",
+      "description": "2"
+    },
+    {
+      "id": "08a0b05c-ec4b-4127-9033-a22783e0e143",
+      "title": "오도리코",
+      "year": "2026",
+      "medium": "5",
+      "size": "55",
+      "image": "uploads/81a000bf-4247-4b43-8a4e-053364ea1122.webp",
+      "alt": "5",
+      "description": "5"
+    },
+    {
+      "id": "2fa58918-53fc-4535-8470-a75886e2e586",
+      "title": "dd",
+      "year": "2026",
+      "medium": "2",
+      "size": "2",
+      "image": "uploads/6c45ac3c-376c-408a-92db-6bc9a4020182.webp",
+      "alt": "3",
+      "description": "4"
+    }
+  ],
+  "cv": [],
+  "exhibitions": [
+    {
+      "id": "f2441316-ee27-4c1e-9b03-1cdad28447bb",
+      "type": "solo",
+      "title": "《시골버스》",
+      "year": "2026",
+      "location": "덜컹시",
+      "description": "시골아줌마, 옆집아저씨",
+      "photos": [
+        {
+          "id": "test-cover",
+          "image": "uploads/08cd50bc-45a7-486a-b722-d365ca5256c3.webp",
+          "alt": "《시골버스》 테스트 대표 이미지",
+          "workId": ""
+        }
+      ],
+      "coverPhotoId": "test-cover",
+      "image": "uploads/08cd50bc-45a7-486a-b722-d365ca5256c3.webp"
+    },
+    {
+      "id": "8a8b817f-1e74-483f-9e68-9723b32db587",
+      "type": "solo",
+      "title": "《리센느》",
+      "year": "2024",
+      "location": "거제시",
+      "description": "거제 야호~",
+      "photos": [
+        {
+          "id": "test-cover",
+          "image": "uploads/6eb3ecf1-5df5-4490-844c-51cf644a9fa0.webp",
+          "alt": "《리센느》 테스트 대표 이미지",
+          "workId": ""
+        }
+      ],
+      "coverPhotoId": "test-cover",
+      "image": "uploads/6eb3ecf1-5df5-4490-844c-51cf644a9fa0.webp"
+    },
+    {
+      "id": "8efb7626-9e4b-4cb4-b2c6-71a6ce0bcfe6",
+      "type": "solo",
+      "title": "《야호》",
+      "year": "2024",
+      "location": "여호시",
+      "description": "여호와 야호",
+      "image": "uploads/eca52995-8776-428e-b3a1-8e581ba2abf4.webp"
+    }
+  ],
+  "news": []
+}

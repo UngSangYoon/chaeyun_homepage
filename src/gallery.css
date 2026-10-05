@@ -1,0 +1,108 @@
+/* Content pages extend the supplied minimal header design. */
+.content-page { min-height: 100vh; display: flex; flex-direction: column; }
+.page { width: 100%; padding: 70px 40px 100px; flex: 1; }
+.reading-page { max-width: 1120px; }
+.page-heading { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 64px; }
+h1, h2, h3 { font-weight: 400; }
+h1 { font-size: 24px; }
+h2 { font-size: 18px; }
+h3 { font-size: 16px; }
+a { color: inherit; }
+a:hover { color: #005cff; }
+.muted, .work-meta, time { color: #686868; }
+.works-years { max-width: 1500px; margin-inline: auto; }
+.works-year-group + .works-year-group { margin-top: 85px; }
+.works-year-heading { display: flex; align-items: center; gap: 24px; margin-bottom: 35px; font-size: 16px; }
+.works-year-heading::after { content: ''; flex: 1; height: 1px; background: #dedede; }
+.works-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 65px clamp(24px, 4vw, 70px); }
+.work-card { min-width: 0; overflow-wrap: anywhere; text-align: center; }
+.work-image { position: relative; display: flex; width: 100%; height: var(--artwork-preview-height); align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.work-image img { width: 100%; height: 100%; object-fit: contain; object-position: center; }
+.work-zoom { position: absolute; right: 0; bottom: 0; padding: 5px 8px; background: #fff; font-size: 16px; opacity: 0; }
+.work-image:hover .work-zoom, .work-image:focus-visible .work-zoom { opacity: 1; }
+.work-heading { font-size: 13px; margin-top: 16px; text-align: center; }
+.work-heading h3 { font-size: 14px; }
+.work-meta { font-size: 12px; margin-top: 8px; line-height: 1.8; }
+.empty-state { grid-column: 1 / -1; color: #686868; font-size: 14px; line-height: 1.9; }
+.text-section + .text-section { margin-top: 75px; }
+.text-section > h2 { margin-bottom: 30px; }
+.prose { max-width: 760px; font-size: 15px; line-height: 2; white-space: pre-wrap; overflow-wrap: anywhere; }
+.prose p + p { margin-top: 25px; }
+.profile { display: flex; justify-content: space-between; gap: 40px; margin-bottom: 65px; }
+.profile h2 { margin-bottom: 12px; }
+.profile p { font-size: 14px; margin-top: 8px; }
+#portrait { max-width: 260px; }
+#portrait img { display: block; width: 100%; max-height: 320px; object-fit: contain; }
+.cv-group { display: grid; grid-template-columns: 180px 1fr; gap: 30px; margin-bottom: 40px; }
+.cv-group h3 { font-size: 14px; }
+.cv-row { display: grid; grid-template-columns: 85px 1fr; gap: 20px; font-size: 14px; line-height: 1.8; }
+.cv-row + .cv-row { margin-top: 18px; }
+.cv-row span { color: #686868; }
+.cv-row p { white-space: pre-wrap; }
+.cv-list + .text-section { margin-top: 65px; }
+.cv-intro { margin-bottom: 65px; }
+.text-link, #contact-links a { display: inline-block; font-size: 14px; text-underline-offset: 4px; }
+#contact-links { display: flex; flex-direction: column; align-items: flex-start; gap: 15px; overflow-wrap: anywhere; }
+.news-card + .news-card { margin-top: 45px; padding-top: 35px; border-top: 1px solid #e8e8e8; }
+.news-card time { font-size: 12px; }
+.news-card h3 { margin: 12px 0 22px; }
+.exhibition-filters { display: flex; flex-wrap: wrap; gap: 30px; margin-bottom: 45px; }
+.exhibition-filters button { min-height: 44px; padding: 10px 0; border: 0; border-bottom: 1px solid transparent; background: none; color: #686868; font-size: 14px; }
+.exhibition-filters button:hover, .exhibition-filters button[aria-pressed="true"] { color: #005cff; border-bottom-color: #005cff; }
+.exhibition-title-link { text-decoration: none; }
+.exhibition-cover-link { text-decoration: none; }
+details { margin-top: 22px; }
+summary { font-size: 13px; cursor: pointer; }
+.error { margin-top: 25px; color: #ad2727; font-size: 13px; line-height: 1.8; }
+.page-footer { display: flex; justify-content: space-between; gap: 20px; padding: 25px 40px; font-size: 11px; color: #686868; }
+.page-footer small { font-size: inherit; }
+.page-footer a { text-decoration: none; }
+.dialog-open { overflow: hidden; }
+.work-detail-page { max-width: 1600px; margin: 0 auto; }
+.work-detail { display: grid; grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr); gap: 60px; align-items: center; margin-top: 45px; }
+.work-detail-image img { display: block; width: 100%; max-height: 70svh; object-fit: contain; }
+.work-detail-copy { min-width: 0; overflow-wrap: anywhere; }
+.work-detail-copy h1 { line-height: 1.6; }
+.work-detail-copy .work-meta { margin-top: 20px; font-size: 14px; }
+.work-detail-copy .prose { margin-top: 35px; font-size: 14px; }
+.work-navigation { display: flex; justify-content: space-between; gap: 25px; margin-top: 60px; }
+#work-loading { margin-top: 45px; }
+#lightbox { position: fixed; inset: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; border: 0; background: #fff; color: #111; padding: 70px 40px 30px; }
+#lightbox::backdrop { background: #fff; }
+.lightbox-close { position: absolute; right: 40px; top: 25px; border: 0; background: none; padding: 10px 0; cursor: pointer; font-size: 14px; }
+.lightbox-image { height: 65%; display: flex; justify-content: center; }
+.lightbox-image img { width: 100%; height: 100%; object-fit: contain; }
+.lightbox-bottom { display: flex; justify-content: space-between; align-items: center; gap: 25px; margin-top: 35px; text-align: center; }
+.lightbox-bottom h2 { font-size: 17px; }
+.lightbox-bottom p { margin-top: 10px; white-space: pre-wrap; line-height: 1.8; font-size: 13px; }
+.lightbox-bottom small { display: block; margin-top: 12px; color: #686868; }
+.lightbox-bottom button { background: none; border: 0; padding: 15px; font-size: 24px; cursor: pointer; }
+.lightbox-bottom button:disabled { opacity: .25; cursor: default; }
+@media (max-width: 900px) {
+  .works-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 45px 25px; }
+  .cv-group { grid-template-columns: 130px 1fr; }
+}
+@media (max-width: 760px) {
+  .work-detail { grid-template-columns: minmax(0, 1fr); gap: 35px; }
+  .page { padding: 55px 24px 75px; }
+  .page-footer { padding: 25px 24px; }
+}
+@media (max-width: 520px) {
+  .page { padding: 45px 20px 65px; }
+  .page-heading { margin-bottom: 40px; }
+  h1 { font-size: 22px; }
+  .works-grid { gap: 35px 20px; }
+  .works-year-group + .works-year-group { margin-top: 60px; }
+  .works-year-heading { margin-bottom: 25px; }
+  .work-heading h3 { font-size: 13px; }
+  .work-meta { font-size: 11px; }
+  .prose { font-size: 14px; }
+  .profile { flex-direction: column; gap: 25px; }
+  .cv-group { grid-template-columns: 1fr; gap: 20px; }
+  .cv-row { grid-template-columns: 65px minmax(0, 1fr); gap: 15px; font-size: 13px; }
+  .page-footer { padding: 25px 20px; }
+  #lightbox { padding: 70px 20px 25px; }
+  .lightbox-close { right: 20px; }
+  .lightbox-image { height: 60%; }
+  .lightbox-bottom { gap: 10px; }
+}

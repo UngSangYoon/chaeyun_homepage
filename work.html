@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="동양화 작가 이채윤의 작품 상세 정보.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Work · Lee Chaeyun">
+  <meta property="og:description" content="동양화 작가 이채윤의 작품과 기록">
+  <meta name="theme-color" content="#ffffff">
+  <title>Work · Lee Chaeyun</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./src/gallery.css">
+  <script type="module" src="./src/public.js"></script>
+</head>
+<body class="content-page" data-view="work">
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="header">
+    <a href="index.html" class="logo" data-english>Lee Chaeyun</a>
+    <a href="works.html" data-page="works">Works</a>
+    <a href="news.html" data-page="news">Exhibition</a>
+    <a href="texts.html" data-page="texts">Texts</a>
+    <a href="cv.html" data-page="cv">CV</a>
+  </header>
+  <main id="main" class="page work-detail-page">
+    <a class="text-link" href="./works.html">← 전체 작품</a>
+    <p id="work-loading" class="empty-state">작품을 불러오고 있습니다.</p>
+    <article id="work-detail" class="work-detail" hidden>
+      <div id="work-detail-image" class="work-detail-image"></div>
+      <div class="work-detail-copy">
+        <h1 id="work-title"></h1>
+        <p id="work-meta" class="work-meta"></p>
+        <div id="work-description" class="prose"></div>
+      </div>
+    </article>
+    <nav id="work-navigation" class="work-navigation" aria-label="다른 작품" hidden>
+      <a id="work-previous" class="text-link">← 이전 작품</a>
+      <a id="work-next" class="text-link">다음 작품 →</a>
+    </nav>
+    <p id="load-error" class="error" role="alert" hidden></p>
+  </main>
+  <footer class="page-footer"><small>© <span id="copyright-year"></span> <span data-english>Lee Chaeyun</span></small><a href="./admin/">Admin</a></footer>
+</body>
+</html>

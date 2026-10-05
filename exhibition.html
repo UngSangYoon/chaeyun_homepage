@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="이채윤의 전시 소개와 전시 사진.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Exhibition · Lee Chaeyun">
+  <meta name="theme-color" content="#ffffff">
+  <title>Exhibition · Lee Chaeyun</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./src/gallery.css">
+  <link rel="stylesheet" href="./src/exhibition.css">
+  <script type="module" src="./src/public.js"></script>
+</head>
+<body class="content-page" data-view="exhibition">
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="header">
+    <a href="index.html" class="logo" data-english>Lee Chaeyun</a>
+    <a href="works.html" data-page="works">Works</a>
+    <a href="news.html" data-page="news">Exhibition</a>
+    <a href="texts.html" data-page="texts">Texts</a>
+    <a href="cv.html" data-page="cv">CV</a>
+  </header>
+  <main id="main" class="page exhibition-detail-page">
+    <a id="exhibition-close" class="lightbox-close exhibition-close" href="./news.html" aria-label="전시 상세 닫기">Close ×</a>
+    <p id="exhibition-loading" class="empty-state">전시를 불러오고 있습니다.</p>
+    <div id="exhibition-detail" class="exhibition-detail" hidden>
+      <section class="exhibition-summary" aria-labelledby="exhibition-title">
+        <h1 id="exhibition-title"></h1>
+        <p id="exhibition-type" class="muted"></p>
+        <p id="exhibition-period" class="muted"></p>
+        <p id="exhibition-location" class="muted"></p>
+        <button id="exhibition-info-open" class="exhibition-info-open" type="button" aria-haspopup="dialog" hidden>+ Info</button>
+        <div id="exhibition-thumbnails" class="exhibition-thumbnails" role="group" aria-label="전시 사진 선택"></div>
+      </section>
+      <section id="exhibition-gallery" class="exhibition-gallery" aria-label="전시 사진">
+        <div class="exhibition-stage">
+          <div id="exhibition-large-image" class="exhibition-large-image"></div>
+          <button id="exhibition-photo-previous" class="exhibition-photo-arrow previous" type="button" aria-label="이전 사진">〈</button>
+          <button id="exhibition-photo-next" class="exhibition-photo-arrow next" type="button" aria-label="다음 사진">〉</button>
+        </div>
+        <div class="exhibition-photo-caption">
+          <span id="exhibition-photo-count" role="status"></span>
+          <a id="exhibition-linked-work" class="text-link" hidden>작품 상세 보기 ↗</a>
+        </div>
+      </section>
+    </div>
+    <p id="load-error" class="error" role="alert" hidden></p>
+  </main>
+  <dialog id="exhibition-info-dialog" class="exhibition-info-dialog" aria-labelledby="exhibition-info-title">
+    <button id="exhibition-info-close" class="exhibition-info-close" type="button" aria-label="전시 소개 닫기">×</button>
+    <h2 id="exhibition-info-title"></h2>
+    <div id="exhibition-info-body" class="prose"></div>
+  </dialog>
+  <footer class="page-footer"><small>© <span id="copyright-year"></span> <span data-english>Lee Chaeyun</span></small><a href="./admin/">Admin</a></footer>
+</body>
+</html>

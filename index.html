@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="동양화 작가 이채윤의 작품, 글, 소식과 약력.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Lee Chaeyun">
+  <meta property="og:description" content="동양화 작가 이채윤의 작품과 기록">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#ffffff">
+  <title>Lee Chaeyun</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./src/home.css">
+  <script type="module" src="./src/public.js"></script>
+</head>
+<body class="home-page" data-view="home">
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="header">
+    <a href="index.html" class="logo" data-english>Lee Chaeyun</a>
+    <a href="works.html" data-page="works">Works</a>
+    <a href="news.html" data-page="news">Exhibition</a>
+    <a href="texts.html" data-page="texts">Texts</a>
+    <a href="cv.html" data-page="cv">CV</a>
+  </header>
+  <main id="main" class="home-canvas">
+    <h1 class="visually-hidden">이채윤 · Lee Chaeyun</h1>
+    <section id="home-gallery" class="home-gallery" aria-label="작품 둘러보기" aria-roledescription="캐러셀" hidden>
+      <div class="home-viewport"><div id="home-track" class="home-track"></div></div>
+      <button id="home-previous" class="home-nav home-nav-previous" type="button" aria-label="이전 작품" hidden><span aria-hidden="true">&lt;</span></button>
+      <button id="home-next" class="home-nav home-nav-next" type="button" aria-label="다음 작품" hidden><span aria-hidden="true">&gt;</span></button>
+      <button id="home-play" class="home-motion-control" type="button" hidden>자동 넘김 일시정지</button>
+    </section>
+    <p id="home-empty" class="home-message">작품을 불러오고 있습니다.</p>
+    <p id="load-error" class="home-message" role="alert" hidden></p>
+  </main>
+
+</body>
+</html>

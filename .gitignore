@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+.dev.vars*
+node_modules/
+dist/
+.local/
+.wrangler/
+.DS_Store
+
+# Local regression tests and initial design notes are not part of the release.
+tests/
+scripts/smoke.mjs
+docs/REFERENCE_ANALYSIS.md
