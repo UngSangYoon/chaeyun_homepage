@@ -5,7 +5,7 @@
 	"compatibility_date": "2026-09-01",
 	"workers_dev": true,
 	"vars": {
-		"SITE_ORIGIN": "https://ungsangyoon.github.io",
+		"SITE_ORIGIN": "https://leechaeyun.pages.dev",
 		"GITHUB_OWNER": "UngSangYoon",
 		"GITHUB_REPO": "chaeyun_homepage",
 		"GITHUB_BRANCH": "main"

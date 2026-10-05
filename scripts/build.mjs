@@ -24,4 +24,4 @@ for (const [file, label] of Object.entries(publicPages)) {
   html = html.replace(/(<meta property="og:title" content=")[^"]*/, (_, prefix) => `${prefix}${title}`);
   await writeFile(resolve(dist, file), html);
 }
-console.log('Built dist/ for GitHub Pages. No private environment values are included.');
+console.log('Built dist/ for static hosting. No private environment values are included.');

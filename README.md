@@ -1,8 +1,8 @@
 # 이채윤 · Lee Chaeyun
 
-동양화 작가 이채윤의 작품·약력·전시·소식을 관리하는 홈페이지입니다. 공개 화면은 **GitHub Pages**, 운영 관리자 API는 **Cloudflare Workers + D1 무료 플랜**에 맞췄습니다. 현재 범위는 로컬 완성본과 배포 안내이며 원격 배포는 하지 않았습니다.
+동양화 작가 이채윤의 작품·약력·전시·소식을 관리하는 홈페이지입니다. 공개 화면은 **Cloudflare Pages**, 관리자 API는 **Cloudflare Workers + D1**을 사용합니다. 운영 주소는 https://leechaeyun.pages.dev/ 입니다. 관리자 저장과 자동 배포에는 별도 토큰 설정이 필요합니다.
 
-- [GitHub Pages / 관리자 API 배포 안내](docs/DEPLOYMENT.md)
+- [Cloudflare Pages / 관리자 API 배포 안내](docs/DEPLOYMENT.md)
 - [관리자 사용 안내](docs/ADMIN_GUIDE.md)
 
 ## 바로 실행
@@ -59,7 +59,7 @@ TIFF는 관리자 브라우저에서 첫 페이지를 WebP로 변환해 업로�
 
 ## 관리자 API가 별도로 필요한 이유
 
-GitHub Pages는 정적 파일만 제공하며 서버 인증을 실행하지 않습니다. 프런트엔드에서 `.env` 비밀번호를 비교하면 비밀번호가 공개됩니다. 로컬에서는 Node 서버, 운영에서는 Worker가 비밀번호를 확인하고 GitHub API로 파일을 저장합니다. 토큰·비밀번호는 공개 코드에 포함하지 않습니다.
+이 홈페이지의 Pages 배포는 정적 파일만 제공하며 서버 인증은 별도 Worker에서 실행합니다. 프런트엔드에서 `.env` 비밀번호를 비교하면 비밀번호가 공개됩니다. 로컬에서는 Node 서버, 운영에서는 Worker가 비밀번호를 확인하고 GitHub API로 파일을 저장합니다. 토큰·비밀번호는 공개 코드에 포함하지 않습니다.
 
 일반 방문자는 Pages의 파일만 읽고 관리자 API는 편집에만 사용합니다. 무료 플랜 범위에서 운영하도록 설계했으며 무제한 무료는 아닙니다. 한도와 설정은 [배포 안내](docs/DEPLOYMENT.md)를 확인하세요.
 
@@ -70,9 +70,9 @@ npm run check
 npm run build
 ```
 
-`dist/`가 GitHub Pages 배포 결과입니다. GitHub Actions는 JavaScript 구문 검사와 콘텐츠·파일 경로 검증을 포함한 빌드 후 Pages에 배포합니다. 테스트 코드와 초기 디자인 분석 자료는 로컬에만 보관하며 저장소에는 포함하지 않습니다.
+`dist/`가 정적 홈페이지 배포 결과입니다. GitHub Actions는 JavaScript 구문 검사와 콘텐츠·파일 경로 검증을 포함한 빌드 후 Pages에 배포합니다. 테스트 코드와 초기 디자인 분석 자료는 로컬에만 보관하며 저장소에는 포함하지 않습니다.
 
-실제 Cloudflare/GitHub 운영 연결은 배포 후 확인해야 합니다.
+관리자 저장과 자동 배포는 배포 안내의 GitHub 및 Cloudflare 토큰 등록을 완료해야 작동합니다.
 
 ## 구조
 
@@ -95,11 +95,10 @@ wrangler.jsonc                 Cloudflare 설정
 .env.example                   로컬 설정 예시
 ```
 
-## 배포 후 예정 주소
+## 운영 주소
 
-아래는 배포 완료 주소가 아니라 Pages 활성화 및 배포 성공 후 사용할 주소입니다.
+- 방문객: https://leechaeyun.pages.dev/
+- 관리자: https://leechaeyun.pages.dev/admin/
+- 관리자 API: https://chaeyun-admin.chaeyun-homepage.workers.dev
 
-- `https://ungsangyoon.github.io/chaeyun_homepage/`
-- `https://ungsangyoon.github.io/chaeyun_homepage/admin/`
-
-D1 ID, Worker의 `ADMIN_PASSWORD`·`GITHUB_TOKEN`, GitHub Actions 변수 `ADMIN_API_URL`을 설정해야 합니다. [배포 안내](docs/DEPLOYMENT.md)의 순서를 따르세요.
+관리자 Worker에는 `ADMIN_PASSWORD`·`GITHUB_TOKEN`, GitHub Actions에는 `CLOUDFLARE_API_TOKEN`이 필요합니다. [배포 안내](docs/DEPLOYMENT.md)를 참고하세요.
