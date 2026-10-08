@@ -8,6 +8,7 @@ import { isAssetPath } from '../src/media.js';
 export function database(path = ':memory:') {
   const db = new DatabaseSync(path);
   db.exec(readFileSync(new URL('../migrations/0001_auth.sql', import.meta.url), 'utf8'));
+  db.exec(readFileSync(new URL('../migrations/0002_public_content.sql', import.meta.url), 'utf8'));
   return {
     prepare(sql) {
       const statement = db.prepare(sql);

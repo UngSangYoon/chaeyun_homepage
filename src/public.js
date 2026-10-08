@@ -1,11 +1,13 @@
-import { $, node, base, asset, picture, paragraphs } from './dom.js';
+import { $, node, base, asset, picture, paragraphs, setAssetBase } from './dom.js';
 import { renderHome } from './home.js';
 import { workUrl } from './work-links.js';
 import { startBrushTrail } from './brush-trail.js';
 import { EXHIBITION_TYPES, groupExhibitions, exhibitionUrl, exhibitionCover } from './exhibitions.js';
 import { renderExhibitionDetail } from './exhibition-detail.js';
+import { API_URL } from '../config.js';
 
 startBrushTrail();
+if (API_URL) setAssetBase(`${API_URL}/public/`);
 
 const view = document.body.dataset.view || 'home';
 const pageNames = { home: '', works: 'Works', work: 'Work', texts: 'Texts', news: 'Exhibition', exhibition: 'Exhibition', cv: 'CV' };
@@ -190,7 +192,7 @@ function render() {
   if (view === 'cv') renderCv();
 }
 try {
-  const response = await fetch(new URL('content/site.json', base), { cache: 'no-cache' });
+  const response = await fetch(API_URL ? `${API_URL}/public/content` : new URL('content/site.json', base), { cache: 'no-store' });
   if (!response.ok) throw new Error();
   site = await response.json(); render();
 } catch {

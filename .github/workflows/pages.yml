@@ -2,6 +2,9 @@ name: Deploy Cloudflare Pages
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'public/content/**'
+      - 'public/uploads/**'
   workflow_dispatch:
 permissions:
   contents: read

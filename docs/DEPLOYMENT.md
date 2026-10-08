@@ -42,7 +42,7 @@ npx wrangler secret put GITHUB_TOKEN
 
 ## 자동 배포 설정
 
-관리자에서 게시하면 GitHub에 커밋되며 `.github/workflows/pages.yml`이 홈페이지를 다시 배포합니다. 다음 토큰이 필요합니다.
+관리자에서 게시하면 GitHub에 백업 커밋되고 D1의 공개 콘텐츠가 갱신됩니다. 방문객은 `/public/content`에서 최신 내용을 읽으므로 새로고침 시 반영됩니다. 업로드 이미지·PDF는 `/public/uploads/...`에서 제공하며 파일마다 고유 경로를 사용해 캐시합니다. 콘텐츠·업로드 커밋은 자동 배포를 실행하지 않습니다. 코드 변경만 `.github/workflows/pages.yml`에서 배포합니다. 다음 토큰이 필요합니다.
 
 1. Cloudflare 계정에서 API Token을 생성합니다. 해당 계정의 **Cloudflare Pages → Edit** 권한만 부여합니다.
 2. GitHub 저장소 Settings → Secrets and variables → Actions → Secrets → New repository secret을 엽니다.
@@ -63,7 +63,7 @@ npx wrangler pages deploy dist --project-name leechaeyun --branch main
 
 ## 운영 확인
 
-관리자 로그인 → 작품 업로드 → 게시 → GitHub Actions 성공 → 홈페이지 반영 순서로 확인합니다. 로그인이 성공해도 `GITHUB_TOKEN`이 없으면 콘텐츠 읽기·저장이 실패합니다. `CLOUDFLARE_API_TOKEN`이 없으면 저장 후 홈페이지 자동 배포가 실패합니다.
+관리자 로그인 → 작품 업로드 → 게시 → 홈페이지 새로고침 순서로 확인합니다. 코드 변경 시에는 GitHub Actions 성공까지 확인합니다. 로그인이 성공해도 `GITHUB_TOKEN`이 없으면 콘텐츠 읽기·저장이 실패합니다. `CLOUDFLARE_API_TOKEN`은 코드 변경 배포에 필요합니다.
 
 | 증상 | 확인 |
 | --- | --- |
@@ -71,7 +71,11 @@ npx wrangler pages deploy dist --project-name leechaeyun --branch main
 | 허용되지 않은 요청 출처 | Worker SITE_ORIGIN과 실제 홈페이지 주소 |
 | 인증 설정 필요 | ADMIN_PASSWORD 길이 및 D1 테이블 |
 | 저장소 연결 미설정 | Worker GITHUB_TOKEN 등록 |
-| 저장 후 화면 미변경 | Deploy Cloudflare Pages 실행 결과 및 토큰 |
+| 저장 후 화면 미변경 | 공개 /public/content 응답 및 새로고침 |
 | Cloudflare 10034 | 계정 이메일 인증 |
 
 Cloudflare 무료 플랜의 요청·CPU·D1·Pages 배포 한도가 적용됩니다. [Workers 제한](https://developers.cloudflare.com/workers/platform/limits/), [Pages 제한](https://developers.cloudflare.com/pages/platform/limits/)
+
+## 공개 콘텐츠 저장소
+
+D1의 `published_content` 테이블이 방문객에게 제공할 콘텐츠를 보관합니다. 최초 공개 요청에서 GitHub 콘텐츠로 초기화하며 이후 관리자 게시 시 갱신합니다. `site.json`을 GitHub에서 직접 수정하는 경우 공개 D1 데이터는 자동 갱신되지 않으므로 관리자에서 최신 내용을 불러와 게시해야 합니다. 공개 GET에는 로그인이 필요 없지만, 저장·업로드·관리자 콘텐츠 조회에는 기존 인증이 적용됩니다.

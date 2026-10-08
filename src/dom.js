@@ -8,9 +8,11 @@ export function node(tag, className = '', text = '') {
   return element;
 }
 export const base = new URL('../', import.meta.url);
+let assetBase = base;
+export function setAssetBase(url) { assetBase = new URL(url); }
 export function asset(path) {
   if (!isAssetPath(path) && !isAssetPath(path, true)) return '';
-  return new URL(path, base).href;
+  return new URL(path, assetBase).href;
 }
 export function picture(path, alt, className = '') {
   const img = node('img', className);

@@ -1,5 +1,5 @@
 import { HttpError, validateContent, identifyUpload } from './validation.js';
-import { MAX_UPLOAD_BYTES } from '../src/media.js';
+import { MAX_UPLOAD_BYTES, isAssetPath } from '../src/media.js';
 
 const encoder = new TextEncoder();
 export async function digest(value) {
@@ -50,6 +50,15 @@ export class GithubRepository {
   async upload(path, bytes) {
     await this.call(`public/${path}`, { method: 'PUT', body: JSON.stringify({ message: 'media: add artist upload', content: base64(bytes), branch: this.env.GITHUB_BRANCH || 'main' }) });
   }
+  async media(path) {
+    const env = this.env;
+    const response = await fetch(`https://api.github.com/repos/${encodeURIComponent(env.GITHUB_OWNER)}/${encodeURIComponent(env.GITHUB_REPO)}/contents/public/${path}?ref=${encodeURIComponent(env.GITHUB_BRANCH || 'main')}`, {
+      headers: { Authorization: `Bearer ${env.GITHUB_TOKEN}`, Accept: 'application/vnd.github.raw+json', 'User-Agent': 'chaeyun-studio', 'X-GitHub-Api-Version': '2022-11-28' },
+      signal: AbortSignal.timeout(20000)
+    });
+    if (!response.ok) throw new HttpError(response.status === 404 ? 404 : 502, '이미지를 불러오지 못했습니다.');
+    return response;
+  }
 }
 async function rateLimit(env, ip, now) {
   for (const [key, max] of [[await digest(ip), 10], ['global', 60]]) {
@@ -68,7 +77,7 @@ async function authorized(request, env, now) {
   return hash;
 }
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin');
     // Same-origin browser GET requests may omit Origin. They still require a
     // valid Bearer session below; writes and cross-origin reads require Origin.
@@ -76,6 +85,35 @@ export default {
       && new URL(request.url).origin === env.SITE_ORIGIN;
     const headers = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Vary': 'Origin' };
     const reply = (body, status = 200) => new Response(JSON.stringify(body), { status, headers });
+    const path = new URL(request.url).pathname.replace(/^\/api/, '');
+    // Public reads expose published content and upload files only. Editing stays authenticated.
+    if (request.method === 'GET' && path.startsWith('/public/')) {
+      headers['Access-Control-Allow-Origin'] = env.SITE_ORIGIN;
+      try {
+        const repository = env.LOCAL_REPOSITORY || new GithubRepository(env);
+        if (path === '/public/content') {
+          let row = await env.DB.prepare('SELECT data FROM published_content WHERE id = ?').bind(1).first();
+          if (!row) {
+            const { data } = await repository.get();
+            await env.DB.prepare('INSERT OR IGNORE INTO published_content (id, data) VALUES (?, ?)').bind(1, JSON.stringify(validateContent(data))).run();
+            row = await env.DB.prepare('SELECT data FROM published_content WHERE id = ?').bind(1).first();
+          }
+          return reply(JSON.parse(row.data));
+        }
+        const assetPath = path.slice('/public/'.length);
+        if (!isAssetPath(assetPath) && !isAssetPath(assetPath, true)) throw new HttpError(404, '파일을 찾을 수 없습니다.');
+        const cacheKey = new Request(new URL(path, request.url));
+        const cached = await caches.default.match(cacheKey);
+        if (cached) return cached;
+        const source = await repository.media(assetPath);
+        const type = assetPath.endsWith('.pdf') ? 'application/pdf' : assetPath.endsWith('.png') ? 'image/png' : assetPath.endsWith('.webp') ? 'image/webp' : 'image/jpeg';
+        const response = new Response(source.body, { headers: { ...headers, 'Content-Type': type, 'Cache-Control': 'public, max-age=31536000, immutable' } });
+        ctx.waitUntil(caches.default.put(cacheKey, response.clone()));
+        return response;
+      } catch (error) {
+        return reply({ error: error instanceof HttpError ? error.message : '공개 내용을 불러오지 못했습니다.' }, error instanceof HttpError ? error.status : 500);
+      }
+    }
     if (!env.SITE_ORIGIN || (origin !== env.SITE_ORIGIN && !sameOriginRead)) return reply({ error: '허용되지 않은 요청 출처입니다.' }, 403);
     headers['Access-Control-Allow-Origin'] = env.SITE_ORIGIN;
     headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS';
@@ -83,7 +121,7 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers });
     try {
       if (!env.ADMIN_PASSWORD || env.ADMIN_PASSWORD.length < 16 || !env.DB) throw new HttpError(503, '관리자 비밀번호(16자 이상)와 인증 저장소 설정이 필요합니다.');
-      const now = Math.floor(Date.now() / 1000), path = new URL(request.url).pathname.replace(/^\/api/, '');
+      const now = Math.floor(Date.now() / 1000);
       if (path === '/login' && request.method === 'POST') {
         await rateLimit(env, request.headers.get('CF-Connecting-IP') || 'local', now);
         const body = await json(request, 2048);
@@ -103,7 +141,9 @@ export default {
         const body = await json(request);
         if (!body || typeof body.sha !== 'string' || !/^[a-f0-9]{40,64}$/.test(body.sha)) throw new HttpError(400, '문서 버전이 올바르지 않습니다. 새로고침해 주세요.');
         const data = validateContent(body.data, { requireExhibitionCovers: true });
-        return reply(await repository.save(data, body.sha));
+        const result = await repository.save(data, body.sha);
+        await env.DB.prepare('INSERT INTO published_content (id, data) VALUES (?, ?) ON CONFLICT(id) DO UPDATE SET data = excluded.data').bind(1, JSON.stringify(data)).run();
+        return reply(result);
       }
       if (path === '/upload' && request.method === 'POST') {
         const bytes = await readBody(request, MAX_UPLOAD_BYTES);

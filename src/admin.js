@@ -1,4 +1,4 @@
-import { $, node, base, picture } from './dom.js';
+import { $, node, base, picture, setAssetBase } from './dom.js';
 import { API_URL } from '../config.js';
 import { optimizedImage, IMAGE_ACCEPT, IMAGE_HINT } from './image-upload.js';
 import { MAX_UPLOAD_BYTES } from './media.js';
@@ -7,6 +7,7 @@ import { exhibitionGalleryEditor } from './exhibition-editor.js';
 
 const local = ['127.0.0.1', 'localhost'].includes(location.hostname);
 const endpoint = API_URL || (local ? `${location.origin}/api` : '');
+if (API_URL) setAssetBase(`${API_URL}/public/`);
 let token = '', data, sha, tab = 'works', dirty = false, busy = false;
 const previews = new Map();
 const labels = { works: 'Works', exhibitions: 'Exhibition', texts: 'Texts', cv: 'CV' };
@@ -103,7 +104,7 @@ function uploadField(object, key, title, pdf = false) {
     setBusy(true); status('파일을 준비하고 있습니다…');
     try {
       object[key] = await uploadFile(file, pdf); changed();
-      status('파일이 저장되었습니다. 변경사항 게시를 누르면 홈페이지에 연결됩니다. 배포 전에는 미리보기가 늦게 나타날 수 있습니다.');
+      status('파일이 저장되었습니다. 변경사항 게시를 누르면 홈페이지에 반영됩니다.');
       render();
     } catch (error) { status(error.message, true); input.value = ''; }
     finally { setBusy(false); }
@@ -209,7 +210,7 @@ $('#save').onclick = async () => {
   try {
     const result = await request('/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data, sha }) });
     sha = result.sha; dirty = false; $('#dirty-label').textContent = '저장됨';
-    status(local ? '저장되었습니다. 홈페이지를 새로고침하면 변경사항을 볼 수 있습니다.' : 'GitHub에 저장되었습니다. 자동 배포가 끝나면 홈페이지에 반영됩니다 (보통 1~3분).');
+    status('저장되었습니다. 홈페이지를 새로고침하면 변경사항을 볼 수 있습니다.');
   } catch (error) { status(error.message, true); }
   finally { setBusy(false); }
 };
