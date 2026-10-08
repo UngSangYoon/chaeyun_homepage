@@ -14,40 +14,40 @@
   "works": [
     {
       "id": "a7cc3faf-8660-4866-abe7-be68fb8cbda0",
-      "title": "뚱보",
+      "title": "2026 3월에서 6월까지",
       "year": "2026",
-      "medium": "뚱보의똥",
-      "size": "68kg",
+      "medium": "면천에 아크릴",
+      "size": "131×169cm",
       "image": "uploads/08cd50bc-45a7-486a-b722-d365ca5256c3.webp",
       "alt": "뚱보다.",
-      "description": "뚱뚱보다."
+      "description": "뚱뚱보다.ㄸ"
     },
     {
       "id": "99cb42b6-d301-4b75-bff8-c9f1b0942c35",
-      "title": "ㅇㅇ",
-      "year": "2026",
-      "medium": "2",
-      "size": "2",
+      "title": "눈물자국에서 파생된 선 2",
+      "year": "2025",
+      "medium": "장지에 분채",
+      "size": "80×58cm",
       "image": "uploads/6eb3ecf1-5df5-4490-844c-51cf644a9fa0.webp",
       "alt": "2",
       "description": "2"
     },
     {
       "id": "08a0b05c-ec4b-4127-9033-a22783e0e143",
-      "title": "오도리코",
+      "title": "갑자기 떠오른 주황배경의 검정선들",
       "year": "2026",
-      "medium": "5",
-      "size": "55",
+      "medium": "면천에 아크릴",
+      "size": "115×83cm",
       "image": "uploads/81a000bf-4247-4b43-8a4e-053364ea1122.webp",
       "alt": "5",
       "description": "5"
     },
     {
       "id": "2fa58918-53fc-4535-8470-a75886e2e586",
-      "title": "dd",
-      "year": "2026",
-      "medium": "2",
-      "size": "2",
+      "title": "눈물자국에서 파생된 선 1",
+      "year": "2025",
+      "medium": "장지에 분채",
+      "size": "80×58cm",
       "image": "uploads/6c45ac3c-376c-408a-92db-6bc9a4020182.webp",
       "alt": "3",
       "description": "4"
@@ -62,6 +62,8 @@
       "year": "2026",
       "location": "덜컹시",
       "description": "시골아줌마, 옆집아저씨",
+      "image": "uploads/08cd50bc-45a7-486a-b722-d365ca5256c3.webp",
+      "coverPhotoId": "test-cover",
       "photos": [
         {
           "id": "test-cover",
@@ -69,9 +71,7 @@
           "alt": "《시골버스》 테스트 대표 이미지",
           "workId": ""
         }
-      ],
-      "coverPhotoId": "test-cover",
-      "image": "uploads/08cd50bc-45a7-486a-b722-d365ca5256c3.webp"
+      ]
     },
     {
       "id": "8a8b817f-1e74-483f-9e68-9723b32db587",
@@ -80,6 +80,8 @@
       "year": "2024",
       "location": "거제시",
       "description": "거제 야호~",
+      "image": "uploads/6eb3ecf1-5df5-4490-844c-51cf644a9fa0.webp",
+      "coverPhotoId": "test-cover",
       "photos": [
         {
           "id": "test-cover",
@@ -87,9 +89,7 @@
           "alt": "《리센느》 테스트 대표 이미지",
           "workId": ""
         }
-      ],
-      "coverPhotoId": "test-cover",
-      "image": "uploads/6eb3ecf1-5df5-4490-844c-51cf644a9fa0.webp"
+      ]
     },
     {
       "id": "8efb7626-9e4b-4cb4-b2c6-71a6ce0bcfe6",
