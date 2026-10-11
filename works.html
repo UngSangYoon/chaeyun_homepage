@@ -28,11 +28,13 @@
   </main>
   <dialog id="lightbox" aria-labelledby="lightbox-title">
     <button class="lightbox-close" aria-label="작품 확대 닫기">Close ×</button>
-    <button class="lightbox-image image-viewer-trigger" type="button" aria-label="작품 이미지 확대"></button>
+    <div class="work-image-stage">
+      <button class="lightbox-image image-viewer-trigger" type="button" aria-label="작품 이미지 확대"></button>
+      <button id="previous-work" class="work-nav work-nav-previous" aria-label="이전 작품">&lt;</button>
+      <button id="next-work" class="work-nav work-nav-next" aria-label="다음 작품">&gt;</button>
+    </div>
     <div class="lightbox-bottom">
-      <button id="previous-work" aria-label="이전 작품">←</button>
       <div><h2 id="lightbox-title"></h2><p id="lightbox-meta"></p></div>
-      <button id="next-work" aria-label="다음 작품">→</button>
     </div>
   </dialog>
   <footer class="page-footer"><small>© <span id="copyright-year"></span> <span data-english>Lee Chaeyun</span></small><a href="./admin/">Admin</a></footer>
