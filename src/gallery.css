@@ -17,11 +17,10 @@ a:hover { color: #005cff; }
 .works-sidebar-menu, .works-year-links { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
 .works-sidebar .works-drawings-link { margin-top: 30px; }
 #works-sidebar-panel { margin-top: 0; }
-#works-sidebar-panel > summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; margin-bottom: 12px; list-style: none; color: #888; font-size: 12px; }
+#works-sidebar-panel > summary { display: flex; align-items: center; justify-content: center; width: 44px; min-height: 44px; margin-bottom: 12px; list-style: none; color: #888; }
 #works-sidebar-panel > summary::-webkit-details-marker { display: none; }
 #works-sidebar-panel > summary::after { content: '‹'; font-size: 22px; }
 #works-sidebar-panel:not([open]) > summary::after { content: '›'; }
-#works-sidebar-panel:not([open]) .works-sidebar-label { display: none; }
 .works-page:has(#works-sidebar-panel:not([open])) { grid-template-columns: 44px minmax(0, 1fr); gap: 30px; }
 .works-sidebar a { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 0; text-decoration: none; font-size: 15px; }
 .works-sidebar a[aria-current] { color: #005cff; }
@@ -123,7 +122,6 @@ summary { font-size: 13px; cursor: pointer; }
   .works-sidebar { position: static; max-height: none; margin-bottom: 35px; overflow: visible; }
   .works-sidebar-menu, .works-year-links { flex-direction: row; flex-wrap: wrap; gap: 8px 24px; }
   .works-year-links, .works-sidebar .works-drawings-link { margin-top: 0; }
-  #works-sidebar-panel > summary { width: fit-content; }
   .page { padding: 55px 24px 75px; }
   .page-footer { padding: 25px 24px; }
 }
