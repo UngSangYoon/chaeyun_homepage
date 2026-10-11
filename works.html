@@ -22,17 +22,14 @@
     <a href="cv.html" data-page="cv">CV</a>
   </header>
   <main id="main" class="page works-page">
-    <aside class="works-sidebar">
-      <details id="works-sidebar-panel" open>
-        <summary aria-label="작품 사이드바 접기·펼치기"></summary>
-        <nav class="works-sidebar-menu" aria-label="작품 분류 및 연도">
-          <div id="works-year-links" class="works-year-links" aria-label="연도별 바로가기"></div>
-          <a class="works-drawings-link" href="#works-drawings">Drawings</a>
-        </nav>
-      </details>
-    </aside>
+    <div class="works-toolbar">
+      <h1 id="works-heading"><button id="works-menu-toggle" type="button" aria-expanded="false" aria-controls="works-menu">Works</button></h1>
+      <nav id="works-menu" class="works-shortcuts" aria-label="작품 분류 및 연도" hidden>
+        <div id="works-year-links" class="works-year-links" aria-label="연도별 바로가기"></div>
+        <a href="#works-drawings">Drawings</a>
+      </nav>
+    </div>
     <div class="works-content">
-      <div class="page-heading"><h1 id="works-heading">Works</h1></div>
       <div id="works-grid" class="works-years" aria-live="polite"><p class="empty-state">작품을 불러오고 있습니다.</p></div>
       <p id="load-error" class="error" role="alert" hidden></p>
     </div>

@@ -78,7 +78,20 @@ function renderWorks() {
     }
     if (!works.length) grid.append(node('p', 'empty-state', site.works.length ? '등록된 드로잉이 없습니다.' : '등록된 작품이 없습니다.'));
   }
-  const selectSection = () => $('.works-sidebar-menu').querySelectorAll('a').forEach(link => {
+  const toggle = $('#works-menu-toggle');
+  const menu = $('#works-menu');
+  toggle.onclick = () => {
+    menu.hidden = !menu.hidden;
+    toggle.setAttribute('aria-expanded', String(!menu.hidden));
+  };
+  menu.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.focus();
+    }
+  });
+  const selectSection = () => menu.querySelectorAll('a').forEach(link => {
     if (link.hash === location.hash) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   });
