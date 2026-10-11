@@ -60,18 +60,18 @@ summary { font-size: 13px; cursor: pointer; }
 .page-footer a { text-decoration: none; }
 .dialog-open { overflow: hidden; }
 .work-detail-page { max-width: 1600px; margin: 0 auto; }
-.work-detail { display: grid; grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr); gap: 60px; align-items: center; margin-top: 45px; }
+.work-detail { display: grid; grid-template-columns: minmax(0, 1fr); gap: 35px; align-items: center; margin-top: 45px; }
 .work-detail-image img { display: block; width: 100%; max-height: 70svh; object-fit: contain; }
-.work-detail-copy { min-width: 0; overflow-wrap: anywhere; }
+.work-detail-copy { min-width: 0; overflow-wrap: anywhere; text-align: center; }
 .work-detail-copy h1 { line-height: 1.6; }
 .work-detail-copy .work-meta { margin-top: 20px; font-size: 14px; }
 .work-detail-copy .prose { margin-top: 35px; font-size: 14px; }
 .work-navigation { display: flex; justify-content: space-between; gap: 25px; margin-top: 60px; }
 #work-loading { margin-top: 45px; }
-#lightbox { position: fixed; inset: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; border: 0; background: #fff; color: #111; padding: 70px 40px 30px; }
+#lightbox { position: fixed; inset: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; border: 0; background: #fff; color: #111; padding: max(70px, 15svh) 40px 30px; }
 #lightbox::backdrop { background: #fff; }
 .lightbox-close { position: absolute; right: 40px; top: 25px; border: 0; background: none; padding: 10px 0; cursor: pointer; font-size: 14px; }
-.lightbox-image { height: 65%; display: flex; justify-content: center; }
+.lightbox-image { height: 70svh; display: flex; align-items: center; justify-content: center; }
 .lightbox-image img { width: 100%; height: 100%; object-fit: contain; }
 .lightbox-bottom { display: flex; justify-content: space-between; align-items: center; gap: 25px; margin-top: 35px; text-align: center; }
 .lightbox-bottom h2 { font-size: 17px; }
@@ -84,7 +84,6 @@ summary { font-size: 13px; cursor: pointer; }
   .cv-group { grid-template-columns: 130px 1fr; }
 }
 @media (max-width: 760px) {
-  .work-detail { grid-template-columns: minmax(0, 1fr); gap: 35px; }
   .page { padding: 55px 24px 75px; }
   .page-footer { padding: 25px 24px; }
 }
@@ -102,8 +101,8 @@ summary { font-size: 13px; cursor: pointer; }
   .cv-group { grid-template-columns: 1fr; gap: 20px; }
   .cv-row { grid-template-columns: 65px minmax(0, 1fr); gap: 15px; font-size: 13px; }
   .page-footer { padding: 25px 20px; }
-  #lightbox { padding: 70px 20px 25px; }
+  #lightbox { padding: max(70px, 20svh) 20px 25px; }
   .lightbox-close { right: 20px; }
-  .lightbox-image { height: 60%; }
+  .lightbox-image { height: 60svh; }
   .lightbox-bottom { gap: 10px; }
 }
