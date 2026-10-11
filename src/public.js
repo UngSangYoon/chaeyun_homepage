@@ -26,7 +26,6 @@ function showWork(index) {
   $('.lightbox-image').replaceChildren(picture(work.image, work.alt || work.title));
   $('#lightbox-title').textContent = work.title;
   $('#lightbox-meta').textContent = [work.medium, work.size].filter(Boolean).join(' · ');
-  $('#lightbox-description').textContent = work.description;
   $('#lightbox-count').textContent = `${current + 1} / ${visibleWorks.length}`;
   $('#previous-work').disabled = $('#next-work').disabled = visibleWorks.length < 2;
   if (!dialog.open) { dialog.showModal(); document.body.classList.add('dialog-open'); }
@@ -85,7 +84,6 @@ function renderWorkDetail() {
   $('#work-detail-image').replaceChildren(image);
   $('#work-title').textContent = work.title;
   $('#work-meta').textContent = [work.year, work.medium, work.size].filter(Boolean).join(' · ');
-  paragraphs($('#work-description'), work.description);
   $('#work-detail').hidden = false;
   if (site.works.length > 1) {
     $('#work-navigation').hidden = false;

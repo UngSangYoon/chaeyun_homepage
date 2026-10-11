@@ -126,7 +126,7 @@ async function uploadFile(file, pdf = false) {
 }
 
 const definitions = {
-  works: [['title', '작품명 *'], ['year', '제작 연도 *', { placeholder: '2026' }], ['medium', '재료 / 기법'], ['size', '크기', { placeholder: '90 × 60 cm' }], ['alt', '이미지 설명', { wide: true, hint: '화면을 볼 수 없는 방문자를 위한 작품의 시각적 설명' }], ['description', '작품 소개', { multiline: true, wide: true }]],
+  works: [['title', '작품명 *'], ['year', '제작 연도 *', { placeholder: '2026' }], ['medium', '재료 / 기법'], ['size', '크기', { placeholder: '90 × 60 cm' }]],
   cv: [['category', '구분 *', { placeholder: '학력 / 개인전 / 단체전 / 수상 / 소장' }], ['period', '연도 / 기간'], ['detail', '내용 *', { wide: true }]],
   exhibitions: [['type', '전시 구분 *', { choices: EXHIBITION_TYPES }], ['title', '전시명 *', { placeholder: '여백의 기록', hint: '제목을 입력하면 《》가 자동으로 붙습니다.', format: formatExhibitionTitle, maxLength: 298 }], ['year', '연도 *', { placeholder: '2026' }], ['period', '전시 기간', { placeholder: '2026. 10. 01 – 10. 31' }], ['location', '장소', { wide: true }], ['description', '전시 소개 (+ Info)', { multiline: true, wide: true }]],
   news: [['title', '제목 *'], ['date', '날짜 *', { type: 'date' }], ['body', '내용 *', { multiline: true, wide: true }]]
@@ -159,6 +159,7 @@ function renderList(container, key = tab) {
   add.onclick = () => {
     const item = { id: crypto.randomUUID() }; for (const [fieldKey] of definitions[key]) item[fieldKey] = '';
     if (key === 'works' || key === 'exhibitions') item.image = '';
+    if (key === 'works') { item.alt = ''; item.description = ''; }
     if (key === 'exhibitions') { item.photos = []; item.coverPhotoId = ''; }
     if (key === 'news') item.date = new Date().toISOString().slice(0, 10);
     data[key].push(item); changed(); render();
