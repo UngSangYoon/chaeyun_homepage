@@ -2,6 +2,7 @@ import { $, node, base, picture } from './dom.js';
 import { workUrl, workWindow } from './work-links.js';
 
 export function renderHome(works) {
+  works = [...works].sort((a, b) => Number(b.year) - Number(a.year));
   const gallery = $('#home-gallery'), track = $('#home-track'), viewport = $('.home-viewport');
   const empty = $('#home-empty'), play = $('#home-play');
   const previous = $('#home-previous'), nextButton = $('#home-next');
