@@ -43,15 +43,26 @@ if (dialog) {
 }
 
 function renderWorks() {
+  const category = new URL(location.href).searchParams.get('category') === 'drawings' ? 'drawings' : 'works';
+  const label = category === 'drawings' ? 'Drawings' : 'Works';
+  $('#works-heading').textContent = label;
+  document.title = `${label} · ${site.profile.englishName}`;
+  $('meta[property="og:title"]').content = document.title;
+  document.querySelectorAll('[data-work-category]').forEach(link => {
+    if (link.dataset.workCategory === category) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
   // A stable sort keeps the admin's order within each year, including in the lightbox.
-  visibleWorks = [...site.works].sort((a, b) => Number(b.year) - Number(a.year));
+  visibleWorks = site.works.filter(work => (work.category || 'works') === category).sort((a, b) => Number(b.year) - Number(a.year));
   const list = $('#works-grid'); list.replaceChildren();
+  const years = $('#works-year-links'); years.replaceChildren();
   let year, grid;
   visibleWorks.forEach((work, i) => {
     if (work.year !== year) {
       year = work.year;
       const section = node('section', 'works-year-group');
       const heading = node('h2', 'works-year-heading', year); heading.id = `works-year-${year}`;
+      const link = node('a', '', year); link.href = `#${heading.id}`; link.setAttribute('aria-label', `${year}년 작품 바로가기`); years.append(link);
       section.setAttribute('aria-labelledby', heading.id);
       grid = node('div', 'works-grid'); section.append(heading, grid); list.append(section);
     }
@@ -66,7 +77,13 @@ function renderWorks() {
     card.append(button, heading, node('p', 'work-meta', [work.medium, work.size].filter(Boolean).join(' · ')));
     grid.append(card);
   });
-  if (!visibleWorks.length) list.append(node('p', 'empty-state', '등록된 작품이 없습니다.'));
+  if (!visibleWorks.length) list.append(node('p', 'empty-state', category === 'drawings' ? '등록된 드로잉이 없습니다.' : '등록된 작품이 없습니다.'));
+  const selectYear = () => years.querySelectorAll('a').forEach(link => {
+    if (link.hash === location.hash) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  });
+  window.addEventListener('hashchange', selectYear); selectYear();
+  if (location.hash) requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
 }
 
 function renderWorkDetail() {

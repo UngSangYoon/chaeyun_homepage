@@ -18,7 +18,7 @@ export function validateContent(data, { requireExhibitionCovers = false } = {}) 
   assert(!p.email || /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(p.email), '이메일 형식을 확인해 주세요.');
   assert(!p.instagram || /^[A-Za-z0-9._]{1,30}$/.test(p.instagram), 'Instagram은 @ 없이 사용자 이름만 입력해 주세요.');
   const fields = {
-    works: { title: true, year: true, medium: false, size: false, image: true, alt: false, description: false },
+    works: { title: true, year: true, category: false, medium: false, size: false, image: true, alt: false, description: false },
     cv: { category: true, period: false, detail: true },
     exhibitions: { type: false, title: true, year: true, location: false, description: false, image: false, period: false, coverPhotoId: false },
     news: { title: true, date: true, body: true }
@@ -29,10 +29,12 @@ export function validateContent(data, { requireExhibitionCovers = false } = {}) 
     for (const item of data[key]) {
       object(item, key); string(item.id, '항목 ID', 100, true); assert(/^[\w-]+$/.test(item.id) && !ids.has(item.id), '항목 ID가 중복되거나 올바르지 않습니다.'); ids.add(item.id);
       for (const [field, required] of Object.entries(schema)) {
+        if (key === 'works' && field === 'category' && item.category === undefined) continue;
         if (key === 'exhibitions' && ['type', 'image', 'period', 'coverPhotoId'].includes(field) && item[field] === undefined) continue;
         string(item[field], `${key} · ${field}`, ['description', 'body'].includes(field) ? 20000 : 300, required);
       }
       if (key === 'works') assert(isAssetPath(item.image) && /^\d{4}$/.test(item.year), '작품 이미지와 4자리 제작 연도를 확인해 주세요.');
+      if (key === 'works') assert(item.category === undefined || ['works', 'drawings'].includes(item.category), '작품 구분을 Works 또는 Drawings로 선택해 주세요.');
       if (key === 'exhibitions') {
         assert(/^\d{4}$/.test(item.year), '전시 연도는 4자리로 입력해 주세요.');
         assert(item.type === undefined || ['solo', 'group'].includes(item.type), '전시 구분을 개인전 또는 단체전으로 선택해 주세요.');
@@ -63,6 +65,7 @@ export function validateContent(data, { requireExhibitionCovers = false } = {}) 
   const profile = Object.fromEntries(['name', 'englishName', 'discipline', 'portrait', 'cvFile', 'email', 'instagram', 'intro', 'statement'].map(k => [k, p[k]]));
   return { version: 1, profile, ...Object.fromEntries(Object.entries(fields).map(([key, schema]) => [key, data[key].map(item => {
     const result = Object.fromEntries(['id', ...Object.keys(schema)].map(k => [k, item[k]]));
+    if (key === 'works' && item.category === undefined) delete result.category;
     if (key === 'exhibitions' && item.photos !== undefined) {
       result.photos = item.photos.map(photo => ({ id: photo.id, image: photo.image, alt: photo.alt || '', workId: photo.workId || '' }));
       const cover = result.photos.find(photo => photo.id === item.coverPhotoId) || result.photos[0];

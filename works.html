@@ -21,10 +21,19 @@
     <a href="texts.html" data-page="texts">Texts</a>
     <a href="cv.html" data-page="cv">CV</a>
   </header>
-  <main id="main" class="page">
-    <div class="page-heading"><h1>Works</h1></div>
-    <div id="works-grid" class="works-years" aria-live="polite"><p class="empty-state">작품을 불러오고 있습니다.</p></div>
-    <p id="load-error" class="error" role="alert" hidden></p>
+  <main id="main" class="page works-page">
+    <nav class="works-sidebar" aria-label="작품 분류 및 연도">
+      <div class="works-category-links">
+        <a href="works.html" data-work-category="works">Works</a>
+        <a href="works.html?category=drawings" data-work-category="drawings">Drawings</a>
+      </div>
+      <div id="works-year-links" class="works-year-links" aria-label="연도별 바로가기"></div>
+    </nav>
+    <div class="works-content">
+      <div class="page-heading"><h1 id="works-heading">Works</h1></div>
+      <div id="works-grid" class="works-years" aria-live="polite"><p class="empty-state">작품을 불러오고 있습니다.</p></div>
+      <p id="load-error" class="error" role="alert" hidden></p>
+    </div>
   </main>
   <dialog id="lightbox" aria-labelledby="lightbox-title">
     <button class="lightbox-close" aria-label="작품 확대 닫기">Close ×</button>

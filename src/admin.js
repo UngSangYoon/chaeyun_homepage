@@ -66,11 +66,11 @@ function field(object, key, title, options = {}) {
   const label = node('label', `field${options.wide ? ' wide' : ''}`); label.append(node('span', '', title));
   const input = node(options.choices ? 'select' : options.multiline ? 'textarea' : 'input');
   if (options.choices) {
-    for (const [value, text] of [['', '전시 구분을 선택해 주세요'], ...options.choices]) {
+    for (const [value, text] of [['', '구분을 선택해 주세요'], ...options.choices]) {
       const option = node('option', '', text); option.value = value; option.disabled = value === ''; input.append(option);
     }
   }
-  input.value = object[key] || ''; input.maxLength = options.maxLength ?? (options.multiline ? 20000 : 300);
+  input.value = object[key] || options.defaultValue || ''; input.maxLength = options.maxLength ?? (options.multiline ? 20000 : 300);
   if (options.type) input.type = options.type;
   if (options.placeholder) input.placeholder = options.placeholder;
   input.oninput = () => { object[key] = options.format ? options.format(input.value) : input.value; changed(); };
@@ -127,7 +127,7 @@ async function uploadFile(file, pdf = false) {
 }
 
 const definitions = {
-  works: [['title', '작품명 *'], ['year', '제작 연도 *', { placeholder: '2026' }], ['medium', '재료 / 기법'], ['size', '크기', { placeholder: '90 × 60 cm' }]],
+  works: [['category', '작품 구분 *', { choices: [['works', 'Works'], ['drawings', 'Drawings']], defaultValue: 'works' }], ['title', '작품명 *'], ['year', '제작 연도 *', { placeholder: '2026' }], ['medium', '재료 / 기법'], ['size', '크기', { placeholder: '90 × 60 cm' }]],
   cv: [['category', '구분 *', { placeholder: '학력 / 개인전 / 단체전 / 수상 / 소장' }], ['period', '연도 / 기간'], ['detail', '내용 *', { wide: true }]],
   exhibitions: [['type', '전시 구분 *', { choices: EXHIBITION_TYPES }], ['title', '전시명 *', { placeholder: '여백의 기록', hint: '제목을 입력하면 《》가 자동으로 붙습니다.', format: formatExhibitionTitle, maxLength: 298 }], ['year', '연도 *', { placeholder: '2026' }], ['period', '전시 기간', { placeholder: '2026. 10. 01 – 10. 31' }], ['location', '장소', { wide: true }], ['description', '전시 소개 (+ Info)', { multiline: true, wide: true }]],
   news: [['title', '제목 *'], ['date', '날짜 *', { type: 'date' }], ['body', '내용 *', { multiline: true, wide: true }]]
@@ -138,16 +138,16 @@ function renderList(container, key = tab) {
   const grouped = key === 'works' || key === 'exhibitions';
   const groups = new Map();
   for (const item of items) {
-    const year = grouped ? (item.year || '').trim() : '', type = key === 'exhibitions' ? item.type || '' : '';
+    const year = grouped ? (item.year || '').trim() : '', type = key === 'exhibitions' ? item.type || '' : key === 'works' ? item.category || 'works' : '';
     const groupKey = JSON.stringify([year, type]);
     if (!groups.has(groupKey)) groups.set(groupKey, { year, type, items: [] });
     groups.get(groupKey).items.push(item);
   }
-  const orderedGroups = [...groups.values()].sort((a, b) => (Number(b.year) || 0) - (Number(a.year) || 0) || ['solo', 'group', ''].indexOf(a.type) - ['solo', 'group', ''].indexOf(b.type));
+  const orderedGroups = [...groups.values()].sort((a, b) => (Number(b.year) || 0) - (Number(a.year) || 0) || ['works', 'drawings', 'solo', 'group', ''].indexOf(a.type) - ['works', 'drawings', 'solo', 'group', ''].indexOf(b.type));
   for (const group of orderedGroups) {
     const section = grouped ? node('section', 'record-year-group') : list;
     if (grouped) {
-      const typeLabel = key === 'exhibitions' ? ` · ${EXHIBITION_TYPES.find(([type]) => type === group.type)?.[1] || '구분 미입력'}` : '';
+      const typeLabel = key === 'exhibitions' ? ` · ${EXHIBITION_TYPES.find(([type]) => type === group.type)?.[1] || '구분 미입력'}` : ` · ${group.type === 'drawings' ? 'Drawings' : 'Works'}`;
       const heading = node('h3', 'record-year-heading', `${group.year || '연도 미입력'}${typeLabel}`);
       heading.append(node('span', 'record-year-count', `${group.items.length}개`)); section.append(heading);
       list.append(section);
@@ -172,7 +172,7 @@ function renderList(container, key = tab) {
       }; controls.append(remove); head.append(controls); card.append(head);
       const grid = node('div', 'field-grid');
       if (key === 'works') grid.append(uploadField(item, 'image', '작품 이미지 *'));
-      for (const [fieldKey, title, options] of definitions[key]) grid.append(field(item, fieldKey, title, { ...options, regroup: grouped && ['year', 'type'].includes(fieldKey) }));
+      for (const [fieldKey, title, options] of definitions[key]) grid.append(field(item, fieldKey, title, { ...options, regroup: grouped && ['year', 'type', 'category'].includes(fieldKey) }));
       if (key === 'exhibitions') grid.append(exhibitionGalleryEditor(item, { works: data.works, upload: uploadFile, changed, confirm: confirmAction, previews, setBusy, status }));
       card.append(grid); section.append(card);
     });
@@ -181,7 +181,7 @@ function renderList(container, key = tab) {
   add.onclick = () => {
     const item = { id: crypto.randomUUID() }; for (const [fieldKey] of definitions[key]) item[fieldKey] = '';
     if (key === 'works' || key === 'exhibitions') item.image = '';
-    if (key === 'works') { item.alt = ''; item.description = ''; }
+    if (key === 'works') { item.category = 'works'; item.alt = ''; item.description = ''; }
     if (key === 'exhibitions') { item.photos = []; item.coverPhotoId = ''; }
     if (key === 'news') item.date = new Date().toISOString().slice(0, 10);
     data[key].push(item); changed(); render();
@@ -193,7 +193,7 @@ function renderList(container, key = tab) {
 function render() {
   document.querySelectorAll('[data-tab]').forEach(el => { if (el.dataset.tab === tab) el.setAttribute('aria-current', 'page'); else el.removeAttribute('aria-current'); });
   const descriptions = {
-    works: '최신 연도부터 표시합니다. ↑ ↓ 버튼으로 같은 연도 안에서 작품 순서를 조정합니다. * 표시는 필수 항목입니다.',
+    works: '작품 구분에서 Works 또는 Drawings를 선택합니다. ↑ ↓ 버튼으로 같은 구분·연도 안에서 순서를 조정합니다. * 표시는 필수 항목입니다.',
     exhibitions: '전시를 연도와 개인전·단체전으로 나눠 표시합니다. ↑ ↓ 버튼으로 같은 구분·연도 안에서 순서를 조정합니다. 대표 이미지는 필수입니다.',
     texts: 'Texts에 표시할 작가 노트와 작업 관련 글을 편집합니다. 빈 줄로 문단을 구분합니다.',
     cv: 'CV에 표시할 작가 소개·사진·연락처·약력을 편집합니다. 빈 항목은 홈페이지에 표시되지 않습니다.'
