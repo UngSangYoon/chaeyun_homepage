@@ -44,5 +44,6 @@ export function decodeTiff(buffer) {
   } else rgba = UTIF.toRGBA8(page);
   const orientation = page.t274?.[0] ?? 1;
   if (!Number.isInteger(orientation) || orientation < 1 || orientation > 8) throw new Error('TIFF 방향 정보가 올바르지 않습니다.');
-  return { width, height, rgba, orientation, pageCount: pages.length };
+  return { width, height, rgba, orientation, pageCount: pages.length,
+    ...(page.t34675?.length ? { icc: new Uint8Array(page.t34675), colorModel: photo === 5 ? 'CMYK' : photo < 2 ? 'GRAY' : 'RGB', ...(photo === 5 ? { cmyk: page.data, samples } : {}) } : {}) };
 }

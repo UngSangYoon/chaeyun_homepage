@@ -15,3 +15,7 @@ npm install --prefix /tmp/chaeyun-tiff-vendor --ignore-scripts --no-audit --no-f
 ```
 
 Keep both license files with the bundle. Application validation and format limits are in `public/lib/tiff-decode.js`; worker orchestration and canvas conversion are in `src/tiff-worker.js` and `src/image-upload.js`.
+
+`lcms.js` and `lcms.wasm` are the unmodified dist files from [lcms-wasm 1.0.5](https://github.com/mattdesl/lcms-wasm), built with LittleCMS 2.16. Both projects use the MIT license; see `lcms-LICENSE.txt` and `littlecms-LICENSE.txt`. They are used only by the TIFF worker to convert embedded RGB, grayscale and CMYK ICC profiles to sRGB before resizing. Conversion is in `public/lib/tiff-color.js`; images without an ICC profile retain the existing behavior.
+
+To retrieve the same files, run `npm pack lcms-wasm@1.0.5` in a temporary directory, extract the archive, and copy `package/dist/lcms.js`, `package/dist/lcms.wasm`, and `package/LICENSE.md` into this directory (the latter as `lcms-LICENSE.txt`).
