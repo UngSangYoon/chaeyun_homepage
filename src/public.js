@@ -5,8 +5,10 @@ import { startBrushTrail } from './brush-trail.js';
 import { EXHIBITION_TYPES, groupExhibitions, exhibitionUrl, exhibitionCover } from './exhibitions.js';
 import { renderExhibitionDetail } from './exhibition-detail.js';
 import { API_URL } from '../config.js';
+import { setupImageViewer } from './image-viewer.js';
 
 startBrushTrail();
+setupImageViewer();
 if (API_URL) setAssetBase(`${API_URL}/public/`);
 
 const view = document.body.dataset.view || 'home';
