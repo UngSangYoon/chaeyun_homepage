@@ -211,6 +211,10 @@ $('#save').onclick = async () => {
   try {
     const result = await request('/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data, sha }) });
     sha = result.sha; dirty = false; $('#dirty-label').textContent = '저장됨';
+    if (typeof window.BroadcastChannel === 'function') {
+      const updates = new window.BroadcastChannel('chaeyun-content');
+      updates.postMessage('published'); updates.close();
+    }
     status('저장되었습니다. 홈페이지를 새로고침하면 변경사항을 볼 수 있습니다.');
   } catch (error) { status(error.message, true); }
   finally { setBusy(false); }

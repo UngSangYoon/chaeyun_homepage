@@ -193,6 +193,25 @@ try {
   const response = await fetch(API_URL ? `${API_URL}/public/content` : new URL('content/site.json', base), { cache: 'no-store' });
   if (!response.ok) throw new Error();
   site = await response.json(); render();
+  // A restored page or an already-open tab otherwise keeps its old data in memory.
+  const snapshot = JSON.stringify(site);
+  let checking = false;
+  async function checkPublishedContent() {
+    if (checking || document.hidden) return;
+    checking = true;
+    try {
+      const latest = await fetch(API_URL ? `${API_URL}/public/content` : new URL('content/site.json', base), { cache: 'no-store' });
+      if (latest.ok && JSON.stringify(await latest.json()) !== snapshot) location.reload();
+    } catch { /* Keep the current page usable during a temporary network failure. */ }
+    finally { checking = false; }
+  }
+  window.addEventListener('focus', checkPublishedContent);
+  window.addEventListener('pageshow', event => { if (event.persisted) checkPublishedContent(); });
+  document.addEventListener('visibilitychange', checkPublishedContent);
+  if (typeof window.BroadcastChannel === 'function') {
+    const updates = new window.BroadcastChannel('chaeyun-content');
+    updates.onmessage = event => { if (event.data === 'published') checkPublishedContent(); };
+  }
 } catch {
   if ($('#home-empty')) $('#home-empty').hidden = true;
   if ($('#work-loading')) $('#work-loading').hidden = true;
