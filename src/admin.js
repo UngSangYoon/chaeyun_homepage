@@ -80,6 +80,7 @@ function field(object, key, title, options = {}) {
     input.value = formatted;
   };
   if (options.choices) input.onchange = input.oninput;
+  if (options.regroup) input.onchange = () => { input.oninput(); render(); };
   label.append(input);
   if (options.hint) label.append(node('small', '', options.hint));
   return label;
@@ -134,27 +135,48 @@ const definitions = {
 function renderList(container, key = tab) {
   const list = node('div', 'record-list'), items = data[key];
   if (!items.length) list.append(node('p', 'list-empty', `아직 등록된 ${recordLabels[key]} 항목이 없습니다. 아래 버튼으로 추가해 주세요.`));
-  items.forEach((item, index) => {
-    const card = node('article', 'record'); const head = node('div', 'record-heading');
-    head.append(node('h3', '', `${String(index + 1).padStart(2, '0')} / ${item.title || item.detail || `새 ${recordLabels[key]}`}`));
-    const controls = node('div', 'record-controls');
-    for (const [direction, text, description] of [[-1, '↑', '위로 이동'], [1, '↓', '아래로 이동']]) {
-      const button = node('button', '', text); button.type = 'button'; button.setAttribute('aria-label', `${index + 1}번 항목 ${description}`);
-      button.disabled = index + direction < 0 || index + direction >= items.length; button.dataset.locked = String(button.disabled);
-      button.onclick = () => { [items[index], items[index + direction]] = [items[index + direction], items[index]]; changed(); render(); }; controls.append(button);
+  const grouped = key === 'works' || key === 'exhibitions';
+  const groups = new Map();
+  for (const item of items) {
+    const year = grouped ? (item.year || '').trim() : '', type = key === 'exhibitions' ? item.type || '' : '';
+    const groupKey = JSON.stringify([year, type]);
+    if (!groups.has(groupKey)) groups.set(groupKey, { year, type, items: [] });
+    groups.get(groupKey).items.push(item);
+  }
+  const orderedGroups = [...groups.values()].sort((a, b) => (Number(b.year) || 0) - (Number(a.year) || 0) || ['solo', 'group', ''].indexOf(a.type) - ['solo', 'group', ''].indexOf(b.type));
+  for (const group of orderedGroups) {
+    const section = grouped ? node('section', 'record-year-group') : list;
+    if (grouped) {
+      const typeLabel = key === 'exhibitions' ? ` · ${EXHIBITION_TYPES.find(([type]) => type === group.type)?.[1] || '구분 미입력'}` : '';
+      const heading = node('h3', 'record-year-heading', `${group.year || '연도 미입력'}${typeLabel}`);
+      heading.append(node('span', 'record-year-count', `${group.items.length}개`)); section.append(heading);
+      list.append(section);
     }
-    const remove = node('button', '', '삭제'); remove.type = 'button'; remove.onclick = async () => {
-      if (await confirmAction('항목을 삭제할까요?', '변경사항을 게시하면 홈페이지에서도 삭제됩니다. 업로드 파일은 저장소에 보관됩니다.')) {
-        if (key === 'works') unlinkExhibitionWork(data.exhibitions, item.id);
-        items.splice(index, 1); changed(); render();
+    group.items.forEach((item, position) => {
+      const index = items.indexOf(item);
+      const card = node('article', 'record'); card.dataset.recordId = item.id;
+      const head = node('div', 'record-heading');
+      head.append(node(grouped ? 'h4' : 'h3', '', `${String(position + 1).padStart(2, '0')} / ${item.title || item.detail || `새 ${recordLabels[key]}`}`));
+      const controls = node('div', 'record-controls');
+      for (const [direction, text, description] of [[-1, '↑', '위로 이동'], [1, '↓', '아래로 이동']]) {
+        const neighbor = group.items[position + direction];
+        const button = node('button', '', text); button.type = 'button'; button.setAttribute('aria-label', `${position + 1}번 항목 ${description}`);
+        button.disabled = !neighbor; button.dataset.locked = String(button.disabled);
+        button.onclick = () => { const target = items.indexOf(neighbor); [items[index], items[target]] = [items[target], items[index]]; changed(); render(); }; controls.append(button);
       }
-    }; controls.append(remove); head.append(controls); card.append(head);
-    const grid = node('div', 'field-grid');
-    if (key === 'works') grid.append(uploadField(item, 'image', '작품 이미지 *'));
-    for (const [fieldKey, title, options] of definitions[key]) grid.append(field(item, fieldKey, title, options));
-    if (key === 'exhibitions') grid.append(exhibitionGalleryEditor(item, { works: data.works, upload: uploadFile, changed, confirm: confirmAction, previews, setBusy, status }));
-    card.append(grid); list.append(card);
-  });
+      const remove = node('button', '', '삭제'); remove.type = 'button'; remove.onclick = async () => {
+        if (await confirmAction('항목을 삭제할까요?', '변경사항을 게시하면 홈페이지에서도 삭제됩니다. 업로드 파일은 저장소에 보관됩니다.')) {
+          if (key === 'works') unlinkExhibitionWork(data.exhibitions, item.id);
+          items.splice(index, 1); changed(); render();
+        }
+      }; controls.append(remove); head.append(controls); card.append(head);
+      const grid = node('div', 'field-grid');
+      if (key === 'works') grid.append(uploadField(item, 'image', '작품 이미지 *'));
+      for (const [fieldKey, title, options] of definitions[key]) grid.append(field(item, fieldKey, title, { ...options, regroup: grouped && ['year', 'type'].includes(fieldKey) }));
+      if (key === 'exhibitions') grid.append(exhibitionGalleryEditor(item, { works: data.works, upload: uploadFile, changed, confirm: confirmAction, previews, setBusy, status }));
+      card.append(grid); section.append(card);
+    });
+  }
   const add = node('button', 'secondary add-button', `＋ ${recordLabels[key]} 추가`); add.type = 'button';
   add.onclick = () => {
     const item = { id: crypto.randomUUID() }; for (const [fieldKey] of definitions[key]) item[fieldKey] = '';
@@ -164,15 +186,15 @@ function renderList(container, key = tab) {
     if (key === 'news') item.date = new Date().toISOString().slice(0, 10);
     data[key].push(item); changed(); render();
     if (key === 'news') $('.editor-news').open = true;
-    const cards = document.querySelectorAll('.record'); cards[cards.length - 1]?.querySelector('input')?.focus();
+    [...document.querySelectorAll('.record')].find(card => card.dataset.recordId === item.id)?.querySelector('input')?.focus();
   };
   container.append(list, add);
 }
 function render() {
   document.querySelectorAll('[data-tab]').forEach(el => { if (el.dataset.tab === tab) el.setAttribute('aria-current', 'page'); else el.removeAttribute('aria-current'); });
   const descriptions = {
-    works: '홈과 Works에 표시할 작품을 등록합니다. 같은 연도에서는 아래 순서를 따릅니다. * 표시는 필수 항목입니다.',
-    exhibitions: 'Exhibition에 표시할 개인전·단체전을 등록합니다. 대표 이미지는 필수이며, 같은 구분·연도에서는 아래 순서를 따릅니다.',
+    works: '최신 연도부터 표시합니다. ↑ ↓ 버튼으로 같은 연도 안에서 작품 순서를 조정합니다. * 표시는 필수 항목입니다.',
+    exhibitions: '전시를 연도와 개인전·단체전으로 나눠 표시합니다. ↑ ↓ 버튼으로 같은 구분·연도 안에서 순서를 조정합니다. 대표 이미지는 필수입니다.',
     texts: 'Texts에 표시할 작가 노트와 작업 관련 글을 편집합니다. 빈 줄로 문단을 구분합니다.',
     cv: 'CV에 표시할 작가 소개·사진·연락처·약력을 편집합니다. 빈 항목은 홈페이지에 표시되지 않습니다.'
   };

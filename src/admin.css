@@ -97,8 +97,13 @@
 .upload-preview { display: block; width: fit-content; max-width: min(100%, 300px); max-height: 250px; object-fit: contain; }
 .upload-field .secondary { align-self: flex-start; }
 .record { padding: 35px 0; border-top: 1px solid #e8e8e8; }
+.record-year-group { margin-top: 35px; }
+.record-year-group + .record-year-group { margin-top: 55px; }
+.record-year-heading { display: flex; align-items: baseline; gap: 14px; padding-bottom: 14px; border-bottom: 1px solid #bbb; font-size: 16px; }
+.record-year-count { color: #888; font-size: 12px; font-weight: normal; }
+.record-year-group > .record:first-of-type { border-top: 0; }
 .record-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 28px; }
-.record-heading h3 { min-width: 0; overflow-wrap: anywhere; font-size: 14px; line-height: 1.8; }
+.record-heading h3, .record-heading h4 { min-width: 0; overflow-wrap: anywhere; font-size: 14px; line-height: 1.8; }
 .record-controls { display: flex; flex-shrink: 0; gap: 10px; }
 .record-controls button { min-width: 44px; min-height: 44px; padding: 8px 12px; border: 1px solid #ddd; background: #fff; font-size: 13px; }
 .record-controls button:hover:not(:disabled) { color: #005cff; border-color: #005cff; }
