@@ -23,6 +23,7 @@ a:hover { color: #005cff; }
 .work-heading { font-size: 13px; margin-top: 16px; text-align: center; }
 .work-heading h3 { font-size: 14px; }
 .work-meta { font-size: 12px; margin-top: 8px; line-height: 1.8; }
+#works-grid .work-heading, #work-title, #work-meta, #lightbox-title, #lightbox-meta { color: #686868; }
 .empty-state { grid-column: 1 / -1; color: #686868; font-size: 14px; line-height: 1.9; }
 .text-section + .text-section { margin-top: 75px; }
 .text-section > h2 { margin-bottom: 30px; }
