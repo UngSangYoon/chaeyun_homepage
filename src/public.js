@@ -26,7 +26,6 @@ function showWork(index) {
   $('.lightbox-image').replaceChildren(picture(work.image, work.alt || work.title));
   $('#lightbox-title').textContent = work.title;
   $('#lightbox-meta').textContent = [work.medium, work.size].filter(Boolean).join(' · ');
-  $('#lightbox-count').textContent = `${current + 1} / ${visibleWorks.length}`;
   $('#previous-work').disabled = $('#next-work').disabled = visibleWorks.length < 2;
   if (!dialog.open) { dialog.showModal(); document.body.classList.add('dialog-open'); }
 }
