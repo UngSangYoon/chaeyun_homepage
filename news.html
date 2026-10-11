@@ -21,8 +21,13 @@
     <a href="texts.html" data-page="texts">Texts</a>
     <a href="cv.html" data-page="cv">CV</a>
   </header>
-  <main id="main" class="page">
-    <div class="page-heading"><h1>Exhibition</h1></div>
+  <main id="main" class="page exhibitions-page">
+    <div class="section-toolbar">
+      <h1><button id="exhibition-menu-toggle" class="section-menu-toggle" type="button" aria-expanded="false" aria-controls="exhibition-menu">Exhibition</button></h1>
+      <nav id="exhibition-menu" class="section-shortcuts" aria-label="전시 연도별 바로가기" hidden>
+        <div id="exhibition-year-links" class="section-year-links"></div>
+      </nav>
+    </div>
     <section class="text-section" aria-label="전시 기록">
       <div class="exhibition-filters" role="group" aria-label="전시 구분">
         <button type="button" data-exhibition-type="solo" aria-pressed="true" aria-controls="exhibition-list">개인전</button>

@@ -21,6 +21,22 @@ document.querySelectorAll('.header [data-page]').forEach(link => {
 });
 if (view === 'home') $('.header .logo').setAttribute('aria-current', 'page');
 
+const sectionToggle = $('.section-menu-toggle');
+if (sectionToggle) {
+  const menu = document.getElementById(sectionToggle.getAttribute('aria-controls'));
+  sectionToggle.onclick = () => {
+    menu.hidden = !menu.hidden;
+    sectionToggle.setAttribute('aria-expanded', String(!menu.hidden));
+  };
+  menu.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      menu.hidden = true;
+      sectionToggle.setAttribute('aria-expanded', 'false');
+      sectionToggle.focus();
+    }
+  });
+}
+
 function showWork(index) {
   if (!dialog || !visibleWorks.length) return;
   current = (index + visibleWorks.length) % visibleWorks.length;
@@ -78,19 +94,7 @@ function renderWorks() {
     }
     if (!works.length) grid.append(node('p', 'empty-state', site.works.length ? '등록된 드로잉이 없습니다.' : '등록된 작품이 없습니다.'));
   }
-  const toggle = $('#works-menu-toggle');
   const menu = $('#works-menu');
-  toggle.onclick = () => {
-    menu.hidden = !menu.hidden;
-    toggle.setAttribute('aria-expanded', String(!menu.hidden));
-  };
-  menu.addEventListener('keydown', event => {
-    if (event.key === 'Escape') {
-      menu.hidden = true;
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.focus();
-    }
-  });
   const selectSection = () => menu.querySelectorAll('a').forEach(link => {
     if (link.hash === location.hash) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
@@ -146,16 +150,31 @@ function renderNews() {
     button.onclick = () => { type = button.dataset.exhibitionType; renderExhibitions(type); };
   });
   renderExhibitions(type);
+  window.addEventListener('hashchange', () => {
+    $('#exhibition-menu').querySelectorAll('a').forEach(link => {
+      if (link.hash === location.hash) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  });
+  if (location.hash) requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
 }
 
 function renderExhibitions(type) {
   document.querySelectorAll('[data-exhibition-type]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.exhibitionType === type)));
   const list = $('#exhibition-list'); list.replaceChildren();
+  const years = $('#exhibition-year-links'); years.replaceChildren();
   const label = EXHIBITION_TYPES.find(([value]) => value === type)?.[1] || '미분류 전시';
   list.setAttribute('aria-label', `${label} 연도별 목록`);
   for (const { year, items } of groupExhibitions(site.exhibitions, type)) {
     const group = node('section', 'works-year-group');
-    group.append(node('h2', 'works-year-heading', year));
+    const yearHeading = node('h2', 'works-year-heading', year);
+    yearHeading.id = `exhibition-year-${year}`;
+    group.setAttribute('aria-labelledby', yearHeading.id);
+    group.append(yearHeading);
+    const yearLink = node('a', '', year); yearLink.href = `#${yearHeading.id}`;
+    yearLink.setAttribute('aria-label', `${year}년 전시 바로가기`);
+    if (yearLink.hash === location.hash) yearLink.setAttribute('aria-current', 'location');
+    years.append(yearLink);
     const entries = node('div', 'works-grid');
     for (const exhibition of items) {
       const entry = node('article', 'work-card');
