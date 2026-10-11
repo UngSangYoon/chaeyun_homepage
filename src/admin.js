@@ -193,7 +193,7 @@ function renderList(container, key = tab) {
 function render() {
   document.querySelectorAll('[data-tab]').forEach(el => { if (el.dataset.tab === tab) el.setAttribute('aria-current', 'page'); else el.removeAttribute('aria-current'); });
   const descriptions = {
-    works: '작품 구분에서 Works 또는 Drawings를 선택합니다. ↑ ↓ 버튼으로 같은 구분·연도 안에서 순서를 조정합니다. * 표시는 필수 항목입니다.',
+    works: 'Works는 연도별 섹션에, Drawings는 Works 페이지의 맨 아래 섹션에 표시됩니다. ↑ ↓ 버튼으로 같은 구분·연도 안에서 순서를 조정합니다. * 표시는 필수 항목입니다.',
     exhibitions: '전시를 연도와 개인전·단체전으로 나눠 표시합니다. ↑ ↓ 버튼으로 같은 구분·연도 안에서 순서를 조정합니다. 대표 이미지는 필수입니다.',
     texts: 'Texts에 표시할 작가 노트와 작업 관련 글을 편집합니다. 빈 줄로 문단을 구분합니다.',
     cv: 'CV에 표시할 작가 소개·사진·연락처·약력을 편집합니다. 빈 항목은 홈페이지에 표시되지 않습니다.'

@@ -15,7 +15,6 @@ a:hover { color: #005cff; }
 .works-content { min-width: 0; }
 .works-sidebar { position: sticky; top: 40px; max-height: calc(100svh - 80px); overflow-y: auto; }
 .works-sidebar-menu, .works-year-links { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
-.works-year-links { margin-top: 20px; }
 .works-sidebar .works-drawings-link { margin-top: 30px; }
 #works-sidebar-panel { margin-top: 0; }
 #works-sidebar-panel > summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; margin-bottom: 12px; list-style: none; color: #888; font-size: 12px; }
