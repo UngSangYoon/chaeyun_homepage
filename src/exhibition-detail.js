@@ -29,7 +29,7 @@ export function renderExhibitionDetail(site) {
   $('#exhibition-info-close').onclick = () => info.close();
   info.addEventListener('close', () => document.body.classList.remove('dialog-open'));
 
-  const photos = exhibitionPhotos(exhibition), cover = exhibitionCover(exhibition);
+  const photos = exhibitionPhotos(exhibition, site.works), cover = exhibitionCover(exhibition, site.works);
   let current = Math.max(0, photos.findIndex(photo => photo.id === cover?.id));
   const thumbnails = $('#exhibition-thumbnails'), stage = $('#exhibition-large-image');
   const previous = $('#exhibition-photo-previous'), next = $('#exhibition-photo-next');

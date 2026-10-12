@@ -178,7 +178,7 @@ function renderExhibitions(type) {
     const entries = node('div', 'works-grid');
     for (const exhibition of items) {
       const entry = node('article', 'work-card');
-      const cover = exhibitionCover(exhibition), href = exhibitionUrl(exhibition.id, base);
+      const cover = exhibitionCover(exhibition, site.works), href = exhibitionUrl(exhibition.id, base);
       const imageLink = node('a', 'work-image exhibition-cover-link'); imageLink.href = href;
       imageLink.setAttribute('aria-label', `${exhibition.title} 전시 상세 보기`);
       if (cover) imageLink.append(picture(cover.image, cover.alt || `${exhibition.title} 대표 사진`));

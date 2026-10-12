@@ -5,18 +5,21 @@ export function exhibitionUrl(id, base) {
   const url = new URL('exhibition.html', base); url.searchParams.set('id', id); return url.href;
 }
 
-export function exhibitionPhotos(exhibition) {
-  if (Array.isArray(exhibition.photos)) return exhibition.photos;
+export function exhibitionPhotos(exhibition, works = []) {
+  if (Array.isArray(exhibition.photos)) return exhibition.photos.map(photo => {
+    const work = photo.useWorkImage && works.find(work => work.id === photo.workId);
+    return work ? { ...photo, image: work.image } : photo;
+  });
   return exhibition.image ? [{ id: 'legacy-cover', image: exhibition.image, alt: '', workId: '' }] : [];
 }
 
-export function exhibitionCover(exhibition) {
-  const photos = exhibitionPhotos(exhibition);
+export function exhibitionCover(exhibition, works = []) {
+  const photos = exhibitionPhotos(exhibition, works);
   return photos.find(photo => photo.id === exhibition.coverPhotoId) || photos[0];
 }
 
-export function syncExhibitionGallery(exhibition) {
-  exhibition.photos = exhibitionPhotos(exhibition);
+export function syncExhibitionGallery(exhibition, works = []) {
+  exhibition.photos = exhibitionPhotos(exhibition, works);
   const cover = exhibitionCover(exhibition);
   exhibition.coverPhotoId = cover?.id || '';
   exhibition.image = cover?.image || '';
@@ -27,9 +30,13 @@ export function removeExhibitionPhoto(exhibition, id) {
   syncExhibitionGallery(exhibition);
 }
 
-export function unlinkExhibitionWork(exhibitions, workId) {
-  for (const exhibition of exhibitions) for (const photo of exhibitionPhotos(exhibition)) {
-    if (photo.workId === workId) photo.workId = '';
+export function unlinkExhibitionWork(exhibitions, workId, works = []) {
+  for (const exhibition of exhibitions) {
+    syncExhibitionGallery(exhibition, works);
+    for (const photo of exhibition.photos) if (photo.workId === workId) {
+      photo.workId = '';
+      delete photo.useWorkImage;
+    }
   }
 }
 

@@ -46,6 +46,7 @@ export function validateContent(data, { requireExhibitionCovers = false } = {}) 
             object(photo, '전시 사진'); string(photo.id, '전시 사진 ID', 100, true);
             assert(/^[\w-]+$/.test(photo.id) && !photoIds.has(photo.id), '전시 사진 ID가 중복되거나 올바르지 않습니다.'); photoIds.add(photo.id);
             string(photo.image, '전시 사진 경로', 300, true); assert(isAssetPath(photo.image), '전시 사진 경로가 올바르지 않습니다.');
+            if (photo.useWorkImage !== undefined) assert(typeof photo.useWorkImage === 'boolean' && (!photo.useWorkImage || workIds.has(photo.workId)), '참조할 Works 작품을 다시 선택해 주세요.');
             if (photo.alt !== undefined) string(photo.alt, '전시 사진 설명', 300);
             if (photo.workId !== undefined) {
               string(photo.workId, '연결 작품 ID', 100);
@@ -67,7 +68,7 @@ export function validateContent(data, { requireExhibitionCovers = false } = {}) 
     const result = Object.fromEntries(['id', ...Object.keys(schema)].map(k => [k, item[k]]));
     if (key === 'works' && item.category === undefined) delete result.category;
     if (key === 'exhibitions' && item.photos !== undefined) {
-      result.photos = item.photos.map(photo => ({ id: photo.id, image: photo.image, alt: photo.alt || '', workId: photo.workId || '' }));
+      result.photos = item.photos.map(photo => ({ id: photo.id, image: photo.useWorkImage ? data.works.find(work => work.id === photo.workId).image : photo.image, alt: photo.alt || '', workId: photo.workId || '', ...(photo.useWorkImage ? { useWorkImage: true } : {}) }));
       const cover = result.photos.find(photo => photo.id === item.coverPhotoId) || result.photos[0];
       result.coverPhotoId = cover?.id || ''; result.image = cover?.image || '';
     }

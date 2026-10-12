@@ -166,7 +166,7 @@ function renderList(container, key = tab) {
       }
       const remove = node('button', '', '삭제'); remove.type = 'button'; remove.onclick = async () => {
         if (await confirmAction('항목을 삭제할까요?', '변경사항을 게시하면 홈페이지에서도 삭제됩니다. 업로드 파일은 저장소에 보관됩니다.')) {
-          if (key === 'works') unlinkExhibitionWork(data.exhibitions, item.id);
+          if (key === 'works') unlinkExhibitionWork(data.exhibitions, item.id, data.works);
           items.splice(index, 1); changed(); render();
         }
       }; controls.append(remove); head.append(controls); card.append(head);

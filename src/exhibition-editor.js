@@ -3,11 +3,28 @@ import { IMAGE_ACCEPT, IMAGE_HINT } from './image-upload.js';
 import { MAX_EXHIBITION_PHOTOS, syncExhibitionGallery, removeExhibitionPhoto } from './exhibitions.js';
 
 export function exhibitionGalleryEditor(exhibition, { works, upload, changed, confirm, previews, setBusy, status }) {
-  syncExhibitionGallery(exhibition);
   const root = node('div', 'field wide exhibition-photo-editor');
   function draw() {
+    syncExhibitionGallery(exhibition, works);
     root.replaceChildren(node('span', '', '전시 사진 · 대표 이미지 필수 *'));
-    const label = node('label', 'exhibition-photo-upload', '사진 여러 장 추가');
+    const workPicker = node('label', 'field', 'Works에서 작품 이미지 추가');
+    const workSelect = node('select'), placeholder = node('option', '', '작품 선택'); placeholder.value = ''; workSelect.append(placeholder);
+    for (const work of [...works].filter(work => work.image).sort((a, b) => Number(b.year) - Number(a.year))) {
+      const option = node('option', '', `${work.title} (${work.year})`); option.value = work.id; workSelect.append(option);
+    }
+    workPicker.append(workSelect);
+    const addWork = node('button', 'secondary', '선택한 작품 추가'); addWork.type = 'button';
+    addWork.disabled = !works.some(work => work.image); addWork.dataset.locked = String(addWork.disabled);
+    addWork.onclick = () => {
+      const work = works.find(work => work.id === workSelect.value);
+      if (!work) { status('추가할 Works 작품을 선택해 주세요.', true); return; }
+      if (exhibition.photos.length >= MAX_EXHIBITION_PHOTOS) { status(`전시 사진은 최대 ${MAX_EXHIBITION_PHOTOS}장까지 등록할 수 있습니다.`, true); return; }
+      exhibition.photos.push({ id: crypto.randomUUID(), image: work.image, alt: work.alt || '', workId: work.id, useWorkImage: true });
+      syncExhibitionGallery(exhibition, works); changed(); draw();
+      status('Works 작품 이미지를 추가했습니다. 변경사항 게시를 눌러 주세요.');
+    };
+    root.append(workPicker, addWork, node('small', '', 'Works 이미지를 참조하며 새 파일을 업로드하지 않습니다. 작품 이미지가 바뀌면 전시에서도 함께 바뀝니다.'));
+    const label = node('label', 'exhibition-photo-upload', '새 사진 여러 장 업로드');
     const input = node('input'); input.type = 'file'; input.accept = IMAGE_ACCEPT; input.multiple = true;
     label.append(input); root.append(label, node('small', '', `${IMAGE_HINT} · 전시당 최대 ${MAX_EXHIBITION_PHOTOS}장`));
     root.append(node('small', '', '사진을 한 장 이상 등록해야 게시할 수 있습니다. 첫 사진이 자동으로 대표가 되며, 다른 사진을 대표로 선택할 수도 있습니다. 대표 사진은 전시 목록과 상세 페이지의 첫 화면에 표시됩니다. 작품을 연결한 사진은 클릭하면 해당 Works 작품으로 이동합니다.'));
@@ -17,6 +34,7 @@ export function exhibitionGalleryEditor(exhibition, { works, upload, changed, co
       const image = picture(photo.image, photo.alt || `전시 사진 ${index + 1}`, 'upload-preview');
       if (previews.has(photo.image)) image.src = previews.get(photo.image);
       card.append(image);
+      if (photo.useWorkImage) card.append(node('small', '', 'Works 이미지 참조'));
       const controls = node('div', 'exhibition-photo-actions');
       const cover = node('button', 'secondary', photo.id === exhibition.coverPhotoId ? '대표 사진 ✓' : '대표 사진으로 설정'); cover.type = 'button';
       cover.setAttribute('aria-pressed', String(photo.id === exhibition.coverPhotoId));
@@ -39,10 +57,11 @@ export function exhibitionGalleryEditor(exhibition, { works, upload, changed, co
       const alt = node('input'); alt.value = photo.alt || ''; alt.maxLength = 300;
       alt.oninput = () => { photo.alt = alt.value; changed(); }; altLabel.append(alt); card.append(altLabel);
       const workLabel = node('label', 'field', '연결할 Works 작품');
-      const select = node('select'), none = node('option', '', '연결 안 함'); none.value = ''; select.append(none);
+      const select = node('select');
+      if (!photo.useWorkImage) { const none = node('option', '', '연결 안 함'); none.value = ''; select.append(none); }
       for (const work of works) { const option = node('option', '', `${work.title} (${work.year})`); option.value = work.id; select.append(option); }
       select.value = photo.workId || '';
-      select.onchange = () => { photo.workId = select.value; changed(); };
+      select.onchange = () => { photo.workId = select.value; changed(); if (photo.useWorkImage) draw(); };
       workLabel.append(select); card.append(workLabel); list.append(card);
     });
     if (!exhibition.photos.length) list.append(node('p', 'list-empty', '등록된 전시 사진이 없습니다.'));
@@ -56,7 +75,7 @@ export function exhibitionGalleryEditor(exhibition, { works, upload, changed, co
           status(`전시 사진을 준비하고 있습니다… ${completed + 1} / ${files.length}`);
           const image = await upload(file);
           exhibition.photos.push({ id: crypto.randomUUID(), image, alt: '', workId: '' });
-          syncExhibitionGallery(exhibition); changed(); completed++;
+          syncExhibitionGallery(exhibition, works); changed(); completed++;
         }
         status(`${completed}장 업로드 완료. 대표 사진과 작품 연결을 설정한 뒤 변경사항 게시를 눌러 주세요.`);
       } catch (error) {
